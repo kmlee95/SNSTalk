@@ -1,30 +1,27 @@
 import React from 'react';
-import { Form } from 'antd';
+import { Card, Avatar, Button } from 'antd';
 
 const UserProfile = () => {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-
   return (
-    <Form>
-      <div>
-        <label htmlFor="user-id">아이디</label>
-        <br />
-        <Input name="user-id" value={id} onChange={onChangeId} required />
-      </div>
-      <div>
-        <label htmlFor="user-id">패스워드</label>
-        <br />
-        <Input
-          name="user-password"
-          type="password"
-          value={password}
-          onChange={onChangeIdPassword}
-          required
-        />
-      </div>
-      <div></div>
-    </Form>
+    <Card
+      actions={[
+        <div key="twit">
+          짹짹
+          <br />0
+        </div>,
+        <div key="followings">
+          팔로잉
+          <br />0
+        </div>,
+        <div key="twit">
+          팔로워
+          <br />0
+        </div>,
+      ]}
+    >
+      <Card.Meta avatar={<Avatar>ZC</Avatar>} title="Kyungmin" />
+      <Button>로그아웃</Button>
+    </Card>
   );
 };
 
