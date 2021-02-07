@@ -30,6 +30,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
       </Menu>
+
       <Row gutter={8}>
         <Col xs={24} md={6}>
           {isLoggedIn ? (
@@ -42,7 +43,13 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          오른쪽메뉴
+          <a
+            href="https://www.zeroch.com"
+            target="_blank"
+            rel="nooreferrer nooopener"
+          >
+            Made by Kyungmin
+          </a>
         </Col>
       </Row>
     </div>
