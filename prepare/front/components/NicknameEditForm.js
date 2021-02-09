@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Form, Input } from 'antd';
 
 const NicknameEditForm = () => {
+  //useMemo 나 styledComponent사용
   const style = useMemo(() => ({
     marginBottom: '20px',
     border: '1px solid #d9d9d9',
