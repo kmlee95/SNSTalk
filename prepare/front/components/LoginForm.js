@@ -3,6 +3,8 @@ import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../reducers';
 
 const ButtonoWrapper = styled.div`
   margin-top: 10px;
@@ -11,21 +13,14 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
-  // const [id, setId] = useState('');
-  // const [password, setPassword] = useState('');
-  // const onChangeId = useCallback((e) => {
-  //   setId(e.target.value);
-  // }, []);
-  // const onChangePassword = useCallback((e) => {
-  //   setPassword(e.target.value);
-  // }, []);
 
   const onSubmitForm = useCallback(() => {
     //antd는 prevent.event적용 되어있음.
-    setIsLoggedIn(true);
+    dispatch(loginAction({ id, password })); //dispatch안 action타입
   }, [id, password]);
 
   return (

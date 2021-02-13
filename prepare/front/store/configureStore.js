@@ -1,7 +1,9 @@
 import { createWrapper } from 'next-redux-wrapper';
 import { createStore } from 'redux';
 
-const coonfigureStoore = () => {
+import reducer from '../reducers';
+
+const configureStore = () => {
   const store = createStore(reducer);
   return store;
 };
