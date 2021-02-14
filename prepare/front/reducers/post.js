@@ -22,7 +22,7 @@ export const initialState = {
       Comments: [
         {
           User: {
-            nickname: 'nero',
+            nickname: '네로임',
           },
           content: '우와 개정판이 나왔군요 ~',
         },
@@ -41,11 +41,11 @@ export const initialState = {
 
 const dummyPost = {
   id: 2,
-  content: '더미데이터입니다.',
   User: {
     id: 1,
     nickname: '제로초',
   },
+  content: '더미데이터입니다.',
   Images: [],
   Comments: [],
 };
