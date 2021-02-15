@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id);
 
   const onToggleLike = useCallback(() => {
-    setLiked((prev) => !prev); //true =>false, false=>true
+    setLiked((prev) => !prev); //true=>false, false=>true
   }, []);
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
