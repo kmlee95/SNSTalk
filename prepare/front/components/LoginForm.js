@@ -3,8 +3,8 @@ import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonoWrapper = styled.div`
   margin-top: 10px;
@@ -14,13 +14,15 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = () => {
+  const { logInLoading } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
     //antd는 prevent.event적용 되어있음.
-    dispatch(loginAction({ id, password })); //dispatch안 action타입
+    dispatch(loginRequestAction({ id, password })); //dispatch안 action타입
   }, [id, password]);
 
   return (
@@ -42,7 +44,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonoWrapper>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={logInLoading}>
           로그인
         </Button>
         <Link href="/signup">
