@@ -1,42 +1,19 @@
 export const initialState = {
-  mainPosts: [
-    {
-      id: 1,
-      User: {
-        id: 1,
-        nickname: '제로초',
-      },
-      content: '첫 번째 게시글 #해시테그 #익스프레스',
-      Images: [
-        {
-          src:
-            'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
-        },
-        {
-          src: 'https://gimg.gilbut.co.kr/book/BN001968/rn_view_BN001968.jpg',
-        },
-        {
-          src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
-        },
-      ],
-      Comments: [
-        {
-          User: {
-            nickname: '네로임',
-          },
-          content: '우와 개정판이 나왔군요 ~',
-        },
-        {
-          User: {
-            nickname: 'kyugmin',
-          },
-          content: '와우 !!',
-        },
-      ],
-      imagePath: [],
-      postAdded: false,
-    },
-  ],
+  mainPosts: [],
+  imagePaths: [],
+  hasMorePosts: true,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+  addPostLoading: false,
+  addPostDone: false,
+  addPostError: null,
+  removePostLoading: false,
+  removePostDone: false,
+  removePostError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
 };
 
 const dummyPost = {
@@ -72,12 +49,79 @@ export const addPost = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case ADD_POST_REQUEST:
+      return {
+        ...state,
+        addPostLoading: true,
+      };
     case ADD_POST_SUCCESS:
       return {
         ...state,
         mainPosts: [dummyPost, ...state.mainPosts],
-        postAdded: true,
+        addPostLoading: false,
+        addPostDone: true,
       };
+    case ADD_POST_FAILURE:
+      return {
+        ...state,
+        addPostLoading: false,
+        addPostDone: false,
+      };
+
+    case LOAD_POSTS_REQUEST:
+      return {
+        ...state,
+        loadPostsLoading: true,
+      };
+    case LOAD_POSTS_SUCCESS:
+      return {
+        ...state,
+        loadPostsLoading: false,
+        loadPostsDone: true,
+      };
+    case LOAD_POSTS_FAILURE:
+      return {
+        ...state,
+        loadPostsLoading: false,
+        loadPostsDone: false,
+      };
+
+    case REMOVE_POST_REQUEST:
+      return {
+        ...state,
+        removePostLoading: true,
+      };
+    case REMOVE_POST_SUCCESS:
+      return {
+        ...state,
+        removePostLoading: false,
+        removePostDone: true,
+      };
+    case REMOVE_POST_FAILURE:
+      return {
+        ...state,
+        removePostLoading: false,
+        removePostDone: false,
+      };
+
+    case ADD_COMMENT_REQUEST:
+      return {
+        ...state,
+        addCommentLoading: true,
+      };
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        addCommentLoading: false,
+        addCommentDone: true,
+      };
+    case ADD_COMMENT_FAILURE:
+      return {
+        ...state,
+        addCommentLoading: false,
+        addCommentDone: false,
+      };
+
     default:
       return state;
   }

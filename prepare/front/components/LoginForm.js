@@ -17,20 +17,25 @@ const LoginForm = () => {
   const { logInLoading } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
     //antd는 prevent.event적용 되어있음.
-    dispatch(loginRequestAction({ id, password })); //dispatch안 action타입
-  }, [id, password]);
+    dispatch(loginRequestAction({ email, password })); //dispatch안 action타입
+  }, [email, password]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-id">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
-        <Input name="user-id" value={id} onChange={onChangeId} required />
+        <Input
+          name="user-email"
+          value={email}
+          onChange={onChangeEmail}
+          required
+        />
       </div>
       <div>
         <label htmlFor="user-password">패스워드</label>

@@ -58,6 +58,23 @@ export const logoutRequestAction = () => {
   };
 };
 
+const dummyUser = (data) => ({
+  ...data,
+  nickname: 'kyungmin',
+  id: 1,
+  Posts: [{ id: 1 }],
+  Followings: [
+    { nickname: '부기초' },
+    { nickname: 'Chanho Lee' },
+    { nickname: 'neue zeal' },
+  ],
+  Followers: [
+    { nickname: '부기초' },
+    { nickname: 'Chanho Lee' },
+    { nickname: 'neue zeal' },
+  ],
+});
+
 //success, failure은 saga가 알아서 호출해준다.
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -71,7 +88,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         logInLoading: false,
         logInDone: true,
-        me: { ...action.data, nickname: 'kyungmin' },
+        me: dummyUser(action.data),
       };
     case LOG_IN_FAILURE:
       return {
@@ -84,13 +101,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         logOutLoading: true,
-        me: null,
       };
     case LOG_OUT_SUCCESS:
       return {
         ...state,
         logOutLoading: false,
-        logOutDone: false,
+        logOutDone: true,
         me: null,
       };
     case LOG_OUT_FAILURE:
@@ -98,6 +114,60 @@ const reducer = (state = initialState, action) => {
         ...state,
         logOutLoading: false,
         logOutDone: false,
+      };
+
+    case CHANGE_NICKNAME_REQUEST:
+      return {
+        ...state,
+        changeNicknameLoading: true,
+      };
+    case CHANGE_NICKNAME_SUCCESS:
+      return {
+        ...state,
+        changeNicknameLoading: false,
+        changeNicknameDone: true,
+      };
+    case CHANGE_NICKNAME_FAILURE:
+      return {
+        ...state,
+        changeNicknameLoading: false,
+        changeNicknameDone: false,
+      };
+
+    case FOLLOW_REQUEST:
+      return {
+        ...state,
+        followLoading: true,
+      };
+    case FOLLOW_SUCCESS:
+      return {
+        ...state,
+        followLoading: false,
+        followDone: true,
+      };
+    case FOLLOW_FAILURE:
+      return {
+        ...state,
+        followLoading: false,
+        followDone: false,
+      };
+
+    case UNFOLLOW_REQUEST:
+      return {
+        ...state,
+        unfollowLoading: true,
+      };
+    case UNFOLLOW_SUCCESS:
+      return {
+        ...state,
+        unfollowLoading: false,
+        unfollowDone: true,
+      };
+    case UNFOLLOW_FAILURE:
+      return {
+        ...state,
+        unfollowLoading: false,
+        unfollowDone: false,
       };
 
     default:
