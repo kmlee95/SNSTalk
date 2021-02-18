@@ -1,11 +1,4 @@
-import {
-  all,
-  delay,
-  fork,
-  put,
-  takeLatest,
-  throttle,
-} from 'redux-saga/effects';
+import { all, delay, fork, put, takeLatest, throttle } from 'redux-saga/effects';
 
 import {
   ADD_COMMENT_FAILURE,
@@ -137,10 +130,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-  yield all([
-    fork(watchAddPost),
-    fork(watchLoadPosts),
-    fork(watchRemovePost),
-    fork(watchAddComment),
-  ]);
+  yield all([fork(watchAddPost), fork(watchLoadPosts), fork(watchRemovePost), fork(watchAddComment)]);
 }
