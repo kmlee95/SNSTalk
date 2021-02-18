@@ -30,23 +30,12 @@ const LoginForm = () => {
       <div>
         <label htmlFor="user-email">이메일</label>
         <br />
-        <Input
-          name="user-email"
-          value={email}
-          onChange={onChangeEmail}
-          required
-        />
+        <Input name="user-email" type="email" value={email} onChange={onChangeEmail} required />
       </div>
       <div>
         <label htmlFor="user-password">패스워드</label>
         <br />
-        <Input
-          name="user-password"
-          type="password"
-          value={password}
-          onChange={onChangePassword}
-          required
-        />
+        <Input name="user-password" type="password" value={password} onChange={onChangePassword} required />
       </div>
       <ButtonoWrapper>
         <Button type="primary" htmlType="submit" loading={logInLoading}>

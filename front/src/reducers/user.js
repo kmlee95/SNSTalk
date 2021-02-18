@@ -62,6 +62,13 @@ export const logoutRequestAction = () => {
   };
 };
 
+export const signUpRequestAction = (data) => {
+  return {
+    type: SIGN_UP_REQUEST,
+    data,
+  };
+};
+
 const dummyUser = (data) => ({
   ...data,
   nickname: 'kyungmin',
@@ -110,6 +117,25 @@ const reducer = (state = initialState, action) => {
         ...state,
         logOutLoading: false,
         logOutDone: false,
+      };
+
+    case SIGN_UP_REQUEST:
+      return {
+        ...state,
+        signUpLoading: true, // 회원가입 시도중
+        signUpDone: false,
+      };
+    case SIGN_UP_SUCCESS:
+      return {
+        ...state,
+        signUpLoading: false,
+        signUpDone: true,
+      };
+    case SIGN_UP_FAILURE:
+      return {
+        ...state,
+        signUpLoading: false,
+        signUpDone: false,
       };
 
     case CHANGE_NICKNAME_REQUEST:

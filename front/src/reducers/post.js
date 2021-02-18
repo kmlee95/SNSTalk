@@ -1,3 +1,19 @@
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
+export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
+export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
 export const initialState = {
   mainPosts: [],
   imagePaths: [],
@@ -22,26 +38,38 @@ export const generateDummyPost = (numberId) => {
   }
 };
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+const dummyPost = (data) => ({
+  id: 1,
+  content: '내용임다.kyungmin',
+  User: {
+    id: 1,
+    nickname: '제로초',
+  },
+  Images: [],
+  Comments: [],
+});
 
-export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
-export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: '제로초',
+  },
+});
 
-export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
-export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
-export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
-
-export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
-export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
-export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
-
-export const addPost = {
+/* action 정의 */
+export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
-};
+  data,
+});
 
+export const addComment = (data) => ({
+  type: ADD_COMMENT_REQUEST,
+  data,
+});
+
+/* rudecer */
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_POST_REQUEST:
