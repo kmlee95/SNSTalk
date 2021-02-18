@@ -30,6 +30,10 @@ export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 
+export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
 export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
@@ -63,16 +67,8 @@ const dummyUser = (data) => ({
   nickname: 'kyungmin',
   id: 1,
   Posts: [{ id: 1 }],
-  Followings: [
-    { nickname: '부기초' },
-    { nickname: 'Chanho Lee' },
-    { nickname: 'neue zeal' },
-  ],
-  Followers: [
-    { nickname: '부기초' },
-    { nickname: 'Chanho Lee' },
-    { nickname: 'neue zeal' },
-  ],
+  Followings: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
+  Followers: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
 });
 
 //success, failure은 saga가 알아서 호출해준다.

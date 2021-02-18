@@ -16,15 +16,10 @@ export const initialState = {
   addCommentError: null,
 };
 
-const dummyPost = {
-  id: 2,
-  User: {
-    id: 1,
-    nickname: '제로초',
-  },
-  content: '더미데이터입니다.',
-  Images: [],
-  Comments: [],
+export const generateDummyPost = (numberId) => {
+  {
+    id: numberId;
+  }
 };
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
