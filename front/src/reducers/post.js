@@ -1,3 +1,5 @@
+import shortId from 'shortid';
+
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
@@ -39,8 +41,8 @@ export const generateDummyPost = (numberId) => {
 };
 
 const dummyPost = (data) => ({
-  id: 1,
-  content: '내용임다.kyungmin',
+  id: shortId.generate(),
+  content: data,
   User: {
     id: 1,
     nickname: '제로초',
@@ -78,9 +80,10 @@ const reducer = (state = initialState, action) => {
         addPostLoading: true,
       };
     case ADD_POST_SUCCESS:
+      console.log(action.data);
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         addPostLoading: false,
         addPostDone: true,
       };
@@ -133,8 +136,14 @@ const reducer = (state = initialState, action) => {
         addCommentLoading: true,
       };
     case ADD_COMMENT_SUCCESS:
+      const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };

@@ -2,6 +2,7 @@ import React, { useCallback, useState, useRef, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { addPost } from '../reducers/post';
+import useInput from '../hooks/useInput';
 
 const PostForm = () => {
   const { imagePaths, addPostDone } = useSelector((state) => state.post);
@@ -11,7 +12,7 @@ const PostForm = () => {
   const onSubmit = useCallback(() => {
     dispatch(addPost(text));
     //setText(''); //dispatch 되었는데 서버에서 에러가 났을 경우 지워지면 안되므로 useEffect로 뺀다.
-  }, []);
+  }, [text]);
 
   const imageInput = useRef();
   const onclickImageUpload = useCallback(() => {

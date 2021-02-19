@@ -1,18 +1,19 @@
 import { Button, Form, Input } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useInput from '../hooks/useInput';
 import { useSelector, useDispatch } from 'react-redux';
+import { addComment } from '../reducers/post';
 
 const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
-  const { addCommentDone } = useSelector((state) => state.post);
+  const { addCommentLoading, addCommentDone } = useSelector((state) => state.post);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
   const onSubmitComment = useCallback(() => {
-    console.log(commentText); //htmpType=submit => onFinish작동
-    dispatch(addComment({ commentText, post, id })); //comment내용, post.id, me.id
+    const { id: postId } = post;
+    dispatch(addComment({ commentText, postId, id })); //comment내용, post.id, me.id
   }, [commentText, id]);
 
   useEffect(() => {
@@ -24,9 +25,14 @@ const CommentForm = ({ post }) => {
   return (
     <Form onFinish={onSubmitComment}>
       <Form.Item style={{ position: 'relative', margin: 0 }}>
-        <Input.TextArea rows={4} value={commentText} onChange={onChangeCommentText} />
-        <Button style={{ position: 'absolute', right: 0, bottom: -40 }} type="primary" htmlType="submit">
-          덧글달기
+        <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
+        <Button
+          style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }}
+          type="primary"
+          htmlType="submit"
+          loading={addCommentLoading}
+        >
+          삐약
         </Button>
       </Form.Item>
     </Form>
