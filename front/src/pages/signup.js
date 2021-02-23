@@ -1,19 +1,39 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Head from 'next/head';
-import AppLayout from '../components/AppLayout';
 import { Form, Input, Checkbox, Button } from 'antd';
-import useInput from '../hooks/useInput';
 import styled from 'styled-components';
-import signUpRequestAction from '../reuders/user';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
+
+import AppLayout from '../components/AppLayout';
+import useInput from '../hooks/useInput';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const ErrorMessage = styled.div`
   color: red;
 `;
 
-const signup = () => {
+const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace('/');
+    }
+  }, [me && me.id]);
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.replace('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -43,9 +63,12 @@ const signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(id, nickname, password); //서버로 보내는데이터
-    dispatch(signUpRequestAction({ id, nickname, password }));
-  }, [password, passwordCheck, term]);
+    console.log(email, nickname, password);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
+  }, [email, password, passwordCheck, term]);
 
   return (
     <AppLayout>
@@ -78,11 +101,11 @@ const signup = () => {
             required
             onChange={onChangePasswordCheck}
           />
-          {passwordError && <ErrorMessage> 비밀번호가 일치하지 않습니다.</ErrorMessage>}
+          {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
         </div>
         <div>
           <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
-            이경민 말을 잘 들을 것을 동의합니다.
+            경민이 말을 잘 들을것을 동의합니다.
           </Checkbox>
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
@@ -96,4 +119,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default Signup;
