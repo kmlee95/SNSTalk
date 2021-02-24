@@ -34,3 +34,8 @@ module.exports = () => {
 
 /* 결론 */
 //브라어주에서 세션쿠키로 세션 id를 찾아 그 세션안에 들어있는 db id를 찾아서 정보를 가져온다.
+
+// 일단 passport.session이 deserializeUser을 실행하지만. deserializeUser는 serializeUser 후에 모든 라우터 접근 시 실행됩니다.
+// strategy의 done함수는 passport.authenticate의 콜백함수로 인수들을 넘깁니다.
+// serializeUser의 done 함수는 에러가 없을 시 세션에 인수를 저장합니다.
+// deserializeUser의 done함수는 req.user을 만듭니다.(에러가 없을 시)
