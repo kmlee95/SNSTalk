@@ -45,6 +45,8 @@ app.use(
 app.use('/post', postRouter);
 app.use('/user', userRouter);
 
+//보통 에러처리 미들웨어는 숨겨져 있다. next(err)로 실행되는데 바꾸고싶으면 에러처리 미들웨어 따로 만들어준다.
+
 app.listen(3065, () => {
   console.log('서버 실행중');
 });

@@ -27,7 +27,7 @@ const PostForm = () => {
         text,
       },
     });
-  }, []);
+  }, [text]);
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);

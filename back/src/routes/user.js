@@ -2,10 +2,10 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { Post, User } = require('../../models');
-
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const router = express.Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   //미들웨어 확장
   //여기서 passport전략으로 간다.
   passport.authenticate('local', (err, user, info) => {
@@ -39,13 +39,13 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-router.post('/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.send('ok');
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', isNotLoggedIn, async (req, res, next) => {
   //Post /user
   try {
     const exUser = await User.findOne({
