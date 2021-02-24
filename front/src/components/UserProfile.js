@@ -31,12 +31,7 @@ const UserProfile = () => {
         </div>,
       ]}
     >
-      {me && me.nickname && (
-        <Card.Meta
-          avatar={<Avatar>{me.nickname[0]}</Avatar>}
-          title={me.nickname}
-        />
-      )}
+      {me && me.nickname && <Card.Meta avatar={<Avatar>{me.nickname[0]}</Avatar>} title={me.nickname} />}
       <Button onClick={onLogOut} loading={logOutLoading}>
         로그아웃
       </Button>

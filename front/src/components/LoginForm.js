@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = () => {
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
@@ -24,6 +24,12 @@ const LoginForm = () => {
     //antd는 prevent.event적용 되어있음.
     dispatch(loginRequestAction({ email, password })); //dispatch안 action타입
   }, [email, password]);
+
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
