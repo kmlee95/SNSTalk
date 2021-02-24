@@ -1,16 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const { Post } = require('../../models');
+const { Post, User, Image, Comment } = require('../../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 //POST /post
 router.post('/', isLoggedIn, async (req, res, next) => {
   try {
-    await Post.create({
+    const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id, //라우터 접근 시 deseerrializeUser가 실행, 사용자 정보를 복구 후 req.user만듬
     });
-    res.status(201).json(post);
+    const fullPost = await Post.findOne({
+      where: { id: post.id },
+      include: [
+        {
+          model: Image,
+        },
+        {
+          model: Comment,
+        },
+        {
+          model: User,
+        },
+      ],
+    });
+    res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
     next(error);

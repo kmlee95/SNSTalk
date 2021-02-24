@@ -37,8 +37,8 @@ passportConfig();
 
 app.use(
   cors({
-    origin: true,
-    credentials: false,
+    origin: 'http://localhost:3060',
+    credentials: true, //쿠키도 전달
   }),
 );
 

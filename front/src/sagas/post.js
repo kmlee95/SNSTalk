@@ -47,7 +47,6 @@ function addPostAPI(data) {
 function* addPost(action) {
   try {
     const result = yield call(addPostAPI, action.data);
-    const id = shortId.generate();
     yield put({
       type: ADD_POST_SUCCESS,
       data: result.data,

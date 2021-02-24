@@ -23,9 +23,7 @@ const PostForm = () => {
   const onSubmitForm = useCallback(() => {
     dispatch({
       type: ADD_POST_REQUEST,
-      data: {
-        text,
-      },
+      data: text,
     });
   }, [text]);
 
@@ -40,7 +38,7 @@ const PostForm = () => {
         <input type="file" multiple hidden ref={imageInput} />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
         <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={addPostLoading}>
-          짹짹
+          올리기
         </Button>
       </div>
       <div>
