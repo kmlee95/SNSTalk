@@ -51,7 +51,6 @@ const reducer = (state = initialState, action) =>
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
-        screen;
         draft.loadPostsError = null;
         break;
       case LOAD_POSTS_SUCCESS:
@@ -99,7 +98,7 @@ const reducer = (state = initialState, action) =>
         break;
       case ADD_COMMENT_SUCCESS: {
         const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-        post.Comments.unshift(action.data.content);
+        post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;

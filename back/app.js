@@ -4,8 +4,10 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const morgan = require('morgan');
 
 const postRouter = require('./src/routes/post');
+const postsRouter = require('./src/routes/posts');
 const userRouter = require('./src/routes/user');
 const passportConfig = require('./src/passport');
 const db = require('./models');
@@ -34,7 +36,7 @@ db.sequelize
   .catch(console.error);
 
 passportConfig();
-
+app.use(morgan('dev'));
 app.use(
   cors({
     origin: 'http://localhost:3060',
@@ -43,6 +45,7 @@ app.use(
 );
 
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 //보통 에러처리 미들웨어는 숨겨져 있다. next(err)로 실행되는데 바꾸고싶으면 에러처리 미들웨어 따로 만들어준다.

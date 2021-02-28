@@ -34,7 +34,7 @@ const CommentForm = ({ post }) => {
           htmlType="submit"
           loading={addCommentLoading}
         >
-          삐약
+          덧글달기
         </Button>
       </Form.Item>
     </Form>
