@@ -1,15 +1,49 @@
 const express = require('express');
-const router = express.Router();
 const { Post, User, Image, Comment } = require('../../models');
 const { isLoggedIn } = require('./middlewares');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
-//POST /post
-router.post('/', isLoggedIn, async (req, res, next) => {
+const router = express.Router();
+try {
+  fs.accessSync('uploads');
+} catch (error) {
+  console.log('업로드 폴더가 없으므로 생성합니다.');
+  fs.mkdirSync('uploads');
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');
+    },
+    filename(req, file, done) {
+      // 제로초.png
+      const ext = path.extname(file.originalname); // 확장자 추출(.png)
+      const basename = path.basename(file.originalname, ext); // 제로초
+      done(null, basename + '_' + new Date().getTime() + ext); // 제로초15184712891.png
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
+  // POST /post
   try {
     const post = await Post.create({
       content: req.body.content,
-      UserId: req.user.id, //라우터 접근 시 deseerrializeUser가 실행, 사용자 정보를 복구 후 req.user만듬
+      UserId: req.user.id,
     });
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+        await post.addImages(images);
+      } else {
+        // 이미지를 하나만 올리면 image: 제로초.png
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
@@ -20,17 +54,18 @@ router.post('/', isLoggedIn, async (req, res, next) => {
           model: Comment,
           include: [
             {
-              model: User, //댓글 작성자
+              model: User, // 댓글 작성자
               attributes: ['id', 'nickname'],
             },
           ],
         },
         {
-          model: User, //게시글 작성자
+          model: User, // 게시글 작성자
           attributes: ['id', 'nickname'],
         },
         {
-          moodel: User, //좋아요 누른 사람
+          model: User, // 좋아요 누른 사람
+          as: 'Likers',
           attributes: ['id'],
         },
       ],
@@ -114,6 +149,12 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
     console.log(error);
     next(error);
   }
+});
+
+// POST /post/images
+router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
+  console.log(req.files);
+  res.json(req.files.map((v) => v.filename));
 });
 
 module.exports = router;

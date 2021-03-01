@@ -196,7 +196,7 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
       res.status(403).send('없는 사람을 삭제하려고하고 있습니다');
     }
     await user.removeFollowings(req.params.userId);
-    res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    res.status(200).json({ UserId: parseInt(req.params.userId) });
   } catch (error) {
     console.error(error);
     next(error);

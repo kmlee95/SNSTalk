@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 
 const postRouter = require('./src/routes/post');
 const postsRouter = require('./src/routes/posts');
@@ -15,7 +16,7 @@ const db = require('./models');
 const app = express();
 dotenv.config();
 //front에서 보낸 데이터를 req.body에 넣어주는 역활
-app.use(express.json());
+app.use(express.json()); //axios로 데이터 보내는 형식
 app.use(express.urlencoded({ extended: true })); //form submit 했을 때 url encoded방식 처리
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
@@ -27,6 +28,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 
 db.sequelize
   .sync()

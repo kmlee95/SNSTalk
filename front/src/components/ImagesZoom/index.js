@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
-import {
-  Overlay,
-  Header,
-  CloseBtn,
-  SlickWrapper,
-  ImgWrapper,
-  Indicator,
-  Global,
-} from './styles';
+import { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator, Global } from './styles';
 
 const ImagesZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0); //현재 slide 위치 저장
@@ -33,7 +25,7 @@ const ImagesZoom = ({ images, onClose }) => {
           >
             {images.map((v) => (
               <ImgWrapper key={v.src}>
-                <img src={v.src} alt={v.src} />
+                <img src={`http://localhost:3065/${v.src}`} alt={v.src} />
               </ImgWrapper>
             ))}
           </Slick>
@@ -52,7 +44,7 @@ ImagesZoom.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
       src: PropTypes.string,
-    })
+    }),
   ).isRequired,
   onClose: PropTypes.func.isRequired,
 };
