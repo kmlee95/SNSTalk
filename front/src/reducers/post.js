@@ -74,6 +74,7 @@ export const addComment = (data) => ({
 });
 
 // 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
+// draft : 현재상태 값 , action : 내가 받은 데이터
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
@@ -157,8 +158,8 @@ const reducer = (state = initialState, action) =>
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
-        draft.hasMorePosts = draft.mainPosts.length < 50;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePosts = action.data.length === 10; //98개를 불러온다면 8개 불러올떄 false
         break;
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
