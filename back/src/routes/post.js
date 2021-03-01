@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Post, User, Image, Comment } = require('../../models');
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const { isLoggedIn } = require('./middlewares');
 
 //POST /post
 router.post('/', isLoggedIn, async (req, res, next) => {
@@ -99,6 +99,19 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
     res.json({ PostId: post.id, UserId: req.user.id });
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {
+  // DELETE /post/10
+  try {
+    await Post.destroy({
+      where: { id: req.params.postId, UserId: req.user.id },
+    });
+    res.status(200).json({ PostId: parseInt(req.params.postId) });
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 });

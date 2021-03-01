@@ -31,14 +31,14 @@ const PostCard = ({ post }) => {
       return alert('로그인이 필요합니다.');
     }
     dispatch({ type: LIKE_POST_REQUEST, data: post.id });
-  }, []);
+  }, [id]);
 
   const onUnlike = useCallback(() => {
     if (!id) {
       return alert('로그인이 필요합니다.');
     }
     dispatch({ type: UNLIKE_POST_REQUEST, data: post.id });
-  }, []);
+  }, [id]);
 
   const onRemovePost = useCallback(() => {
     if (!id) {
@@ -48,7 +48,7 @@ const PostCard = ({ post }) => {
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
-  }, []);
+  }, [id]);
 
   const liked = post.Likers.find((v) => v.id === id);
 
