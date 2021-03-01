@@ -36,7 +36,7 @@ db.sequelize
   .catch(console.error);
 
 passportConfig();
-app.use(morgan('dev'));
+app.use(morgan('dev')); //프론트에서 어떤요청이 왔는지 확인 가능
 app.use(
   cors({
     origin: 'http://localhost:3060',
