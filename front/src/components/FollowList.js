@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from '../reducers/user';
 
 const FollowList = ({ header, data }) => {
-  console.log(header);
   const dispatch = useDispatch();
   const onCancel = (id) => () => {
     if (header === '팔로잉') {
