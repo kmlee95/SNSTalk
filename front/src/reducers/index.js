@@ -4,19 +4,19 @@ import post from './post';
 import { combineReducers } from 'redux';
 
 // 이전상태와 action을 통해 => 다음상태로
-const rootReducer = combineReducers({
-  //HYDRATE를 위해 index reducer추가(서버사이드렌더링을 위해)
-  index: (state = {}, action) => {
-    switch (action.type) {
-      case HYDRATE:
-        return { ...state, ...action.payload };
-
-      default:
-        return state;
+const rootReducer = (state, action) => {
+  switch (action.type) {
+    case HYDRATE:
+      console.log('HYDRATE', action);
+      return action.payload;
+    default: {
+      const combinedReducers = combineReducers({
+        user,
+        post,
+      });
+      return combinedReducers(state, action);
     }
-  },
-  user,
-  post,
-});
+  }
+};
 
 export default rootReducer;
