@@ -20,7 +20,7 @@ const Profile = () => {
         <Card
           actions={[
             <div key="twit">
-              짹짹
+              내게시글
               <br />
               {userInfo.Posts}
             </div>,

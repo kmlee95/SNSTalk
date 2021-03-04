@@ -13,7 +13,7 @@ import AppLayout from '../../components/AppLayout';
 const Post = () => {
   const { singlePost } = useSelector((state) => state.post);
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query; //post/1 일 경우 1을 가져온다.
 
   return (
     <AppLayout>
@@ -38,7 +38,7 @@ const Post = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   const cookie = context.req ? context.req.headers.cookie : '';
-
+  console.log(context);
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
@@ -52,6 +52,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
+  return { props: {} };
 });
 
 export default Post;

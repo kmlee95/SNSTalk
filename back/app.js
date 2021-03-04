@@ -10,6 +10,7 @@ const path = require('path');
 const postRouter = require('./src/routes/post');
 const postsRouter = require('./src/routes/posts');
 const userRouter = require('./src/routes/user');
+const hashtagRouter = require('./src/routes/hashtag');
 const passportConfig = require('./src/passport');
 const db = require('./models');
 
@@ -49,6 +50,7 @@ app.use(
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
+app.use('/hashtag', hashtagRouter);
 
 //보통 에러처리 미들웨어는 숨겨져 있다. next(err)로 실행되는데 바꾸고싶으면 에러처리 미들웨어 따로 만들어준다.
 

@@ -31,7 +31,7 @@ const AppLayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item>
           <Link href="/">
-            <a>노드버드</a>
+            <a>Home</a>
           </Link>
         </Menu.Item>
         <Menu.Item>
@@ -57,11 +57,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <a
-            href="https://www.zeroch.com"
-            target="_blank"
-            rel="nooreferrer nooopener"
-          >
+          <a href="https://www.zeroch.com" target="_blank" rel="nooreferrer nooopener">
             Made by Kyungmin
           </a>
         </Col>
