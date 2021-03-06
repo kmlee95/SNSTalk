@@ -159,7 +159,7 @@ function* loadUserPosts(action) {
 }
 
 function loadHashtagPostsAPI(data, lastId) {
-  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
+  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`); //한글요청을 처리하기 위한 인코딩
 }
 
 function* loadHashtagPosts(action) {

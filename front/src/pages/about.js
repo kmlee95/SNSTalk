@@ -14,7 +14,7 @@ const Profile = () => {
   return (
     <AppLayout>
       <Head>
-        <title>내 프로필 | NodeBird</title>
+        <title>내프로필 | Kyungmin</title>
       </Head>
       {userInfo ? (
         <Card
@@ -47,7 +47,6 @@ const Profile = () => {
   );
 };
 
-//Next.js에서는 빌드할 때 해당 페이지를 정적인 html 파일로 뽑는다. Pre-render한다. 서버에 무리가 덜간다.
 export const getStaticProps = wrapper.getStaticProps(async (context) => {
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
