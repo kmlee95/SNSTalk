@@ -52,7 +52,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   cors({
-    origin: ['http://localhost:3060', 'nodebird.com'],
+    origin: ['http://localhost:3060', 'nodebird.com', 'http://13.209.19.67'],
     credentials: true, //쿠키도 전달
   }),
 );
@@ -66,6 +66,6 @@ app.use('/hashtag', hashtagRouter);
 
 //보통 에러처리 미들웨어는 숨겨져 있다. next(err)로 실행되는데 바꾸고싶으면 에러처리 미들웨어 따로 만들어준다.
 
-app.listen(3065, () => {
+app.listen(80, () => {
   console.log('서버 실행중');
 });
