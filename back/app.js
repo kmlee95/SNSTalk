@@ -52,7 +52,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   cors({
-    origin: ['http://localhost:3060', 'nodebird.com', 'http://13.209.19.67'],
+    origin: ['http://localhost:3060', 'nodebird.com', 'http://15.164.220.169'],
     credentials: true, //쿠키도 전달
   }),
 );
