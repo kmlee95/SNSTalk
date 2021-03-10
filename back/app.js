@@ -27,6 +27,11 @@ app.use(
     saveUninitialized: false,
     resave: false,
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      domain: process.env.NODE_ENV === 'productiion' && '.snschat.com',
+    },
   }),
 );
 app.use(passport.initialize());
@@ -52,7 +57,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   cors({
-    origin: ['http://localhost:3060', 'nodebird.com', 'http://54.180.2.205'],
+    origin: ['http://localhost:3060', 'snschat.com'],
     credentials: true, //쿠키도 전달
   }),
 );

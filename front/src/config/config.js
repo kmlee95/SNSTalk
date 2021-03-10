@@ -1,1 +1,1 @@
-export const backUrl = process.env.NODE_ENV === 'production' ? 'http://13.125.221.8' : 'http://localhost:3065';
+export const backUrl = process.env.NODE_ENV === 'production' ? 'http://api.snschat.com' : 'http://localhost:3065';
