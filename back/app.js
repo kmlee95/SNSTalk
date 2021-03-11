@@ -51,16 +51,22 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  app.use(
+    cors({
+      origin: ['http://snschat.com', '13.209.199.148'],
+      credentials: true, //쿠키도 전달
+    }),
+  );
 } else {
   app.use(morgan('dev')); //프론트에서 어떤요청이 왔는지 확인 가능
+  app.use(
+    cors({
+      origin: true,
+      credentials: true, //쿠키도 전달
+    }),
+  );
 }
 
-app.use(
-  cors({
-    origin: ['http://localhost:3060', 'snschat.com'],
-    credentials: true, //쿠키도 전달
-  }),
-);
 app.get('/', (req, res) => {
   res.send('hello express');
 });
