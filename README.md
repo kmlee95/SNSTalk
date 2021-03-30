@@ -4,7 +4,7 @@
 ### Front-end
 
 - React ( Hooks )
-- TypeScript
+- JavaScript
 - Redux & Redux saga
 - Ant Design
 - Styled Component
