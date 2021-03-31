@@ -13,7 +13,7 @@
 ### Back-end
 
 - Express.js ( node )
-- Typescript
+- JavaScript
 - Sequelize ( MySQL )
 
 ### DEVOPS
