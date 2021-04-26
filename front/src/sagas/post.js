@@ -190,7 +190,6 @@ function* loadPosts(action) {
       data: result.data,
     });
   } catch (err) {
-    console.error(err);
     yield put({
       type: LOAD_POSTS_FAILURE,
       error: err.response.data,

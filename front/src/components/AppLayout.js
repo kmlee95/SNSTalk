@@ -46,11 +46,6 @@ const AppLayout = ({ children }) => {
         <Col xs={24} md={12}>
           {children}
         </Col>
-        <Col xs={24} md={6}>
-          <a href="https://www.zerocho.com" target="_blank" rel="noreferrer noopener">
-            Made by Kyungmin
-          </a>
-        </Col>
       </Row>
     </div>
   );
