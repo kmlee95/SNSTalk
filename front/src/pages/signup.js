@@ -108,7 +108,7 @@ const Signup = () => {
         </div>
         <div>
           <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
-            경민이 말을 잘 들을것을 동의합니다.
+            약관에 동의합니다.
           </Checkbox>
           {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
         </div>
@@ -123,12 +123,12 @@ const Signup = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : ''; //context 에 req가 들어있음.
+  const cookie = context.req ? context.req.headers.cookie : '';
 
   //서버는 한대인데 쿠키 공유 문제를 제거하기 위해 = 중요
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie; //axios cookie default값으로 쿠키를 넣어줌
+    axios.defaults.headers.Cookie = cookie;
   }
 
   context.store.dispatch({

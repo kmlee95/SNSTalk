@@ -49,14 +49,13 @@ const Home = () => {
   );
 };
 
-// 페이지를 렌더링하기전에 꼭 fetch해야하는 데이터가 있을 경우 사용하라, 계속 다른걸 보여줘야 하는 경우
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : ''; //context 에 req가 들어있음.
+  const cookie = context.req ? context.req.headers.cookie : '';
 
-  //서버는 한대인데 쿠키 공유 문제를 제거하기 위해 = 중요
+  //서버는 한대인데 쿠키 공유 문제를 제거하기 위해
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie; //axios cookie default값으로 쿠키를 넣어줌
+    axios.defaults.headers.Cookie = cookie;
   }
 
   context.store.dispatch({
