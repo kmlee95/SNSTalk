@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Router from 'next/router';
 
-import SignInForm from '../container/SignInForm';
+import SignInForm from '../components/SignInForm';
 
 const SignIn = () => {
   const id = useSelector((state) => state.user.me?.id);
