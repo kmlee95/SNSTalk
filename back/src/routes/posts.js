@@ -21,10 +21,7 @@ router.get('/', async (req, res, next) => {
         [Comment, 'createdAt', 'DESC'],
       ],
       include: [
-        {
-          model: User,
-          attributes: ['id', 'nickname'],
-        },
+        { model: User, attributes: ['id', 'nickname'] },
         {
           model: Image,
         },

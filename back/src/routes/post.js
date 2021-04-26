@@ -21,17 +21,30 @@ AWS.config.update({
   region: 'ap-northeast-2',
 });
 
+// const upload = multer({
+//   storage: multerS3({
+//     s3: new AWS.S3(),
+//     bucket: 'react-nodebird',
+//     key(req, file, cb) {
+//       cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
+//     },
+//   }),
+//   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+// });
 const upload = multer({
-  storage: multerS3({
-    s3: new AWS.S3(),
-    bucket: 'react-nodebird',
-    key(req, file, cb) {
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');
+    },
+    filename(req, file, done) {
+      // 제로초.png
+      const ext = path.extname(file.originalname); // 확장자 추출(.png)
+      const basename = path.basename(file.originalname, ext); // 경민
+      done(null, basename + '_' + new Date().getTime() + ext); // 경민15184712891.png
     },
   }),
   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
-
 //GET /post/1
 router.get('/:postId', async (req, res, next) => {
   try {
@@ -213,6 +226,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
 // POST /post/images
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
   console.log(req.files);
+  //res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
   res.json(req.files.map((v) => v.filename));
 });
 
