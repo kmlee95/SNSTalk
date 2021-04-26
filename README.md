@@ -4,7 +4,7 @@
 ### Front-end
 
 - React ( Hooks )
-- TypeScript
+- JavaScript
 - Redux & Redux saga
 - Ant Design
 - Styled Component
@@ -13,7 +13,7 @@
 ### Back-end
 
 - Express.js ( node )
-- Typescript
+- JavaScript
 - Sequelize ( MySQL )
 
 ### DEVOPS
