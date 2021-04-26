@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useInput from '../hooks/useInput';
@@ -21,6 +21,11 @@ const CommentForm = ({ post }) => {
       });
       return id;
     }
+
+    // e.preventDefault();
+    // if (!commentText || !commentText.trim()) {
+    //   return message.error('댓글의 내용을 입력해주세요!');
+    // }
 
     dispatch({
       type: ADD_COMMENT_REQUEST,

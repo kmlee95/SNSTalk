@@ -13,7 +13,7 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-const LoginForm = () => {
+const SignInForm = () => {
   const { logInLoading, logInError } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -21,8 +21,7 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
-    //antd는 prevent.event적용 되어있음.
-    dispatch(loginRequestAction({ email, password })); //dispatch안 action타입
+    dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
 
   useEffect(() => {
@@ -57,4 +56,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignInForm;

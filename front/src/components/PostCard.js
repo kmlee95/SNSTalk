@@ -2,7 +2,14 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
-import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
+import {
+  RetweetOutlined,
+  HeartOutlined,
+  MessageOutlined,
+  EllipsisOutlined,
+  HeartTwoTone,
+  UserOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import moment from 'moment';
 import Swal from 'sweetalert2';
@@ -118,7 +125,17 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
-        title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
+        title={
+          <>
+            <Link href={`/user/${post.User.id}`}>
+              <a>
+                {post.RetweetId ? <Avatar>{post.User.nickname[0]}</Avatar> : <Avatar icon={<UserOutlined />} />}
+
+                {`${post.User.nickname}${post.RetweetId ? '님이 공유한 게시글 입니다.' : ''}`}
+              </a>
+            </Link>
+          </>
+        }
         extra={id && <FollowButton post={post} />}
       >
         {post.RetweetId && post.Retweet ? (
