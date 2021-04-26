@@ -3,7 +3,8 @@ import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useInput from '../hooks/useInput';
 import { useSelector, useDispatch } from 'react-redux';
-import { addComment, ADD_COMMENT_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST } from '../reducers/post';
+import Swal from 'sweetalert2';
 
 const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
@@ -12,6 +13,15 @@ const CommentForm = ({ post }) => {
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
   const onSubmitComment = useCallback(() => {
+    if (!id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '로그인이 필요합니다.',
+      });
+      return id;
+    }
+
     dispatch({
       type: ADD_COMMENT_REQUEST,
       data: { content: commentText, postId: post.id, userId: id },

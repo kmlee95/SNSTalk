@@ -5,6 +5,7 @@ import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
 import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from '@ant-design/icons';
 import Link from 'next/link';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
@@ -22,17 +23,29 @@ const PostCard = ({ post }) => {
 
   const onLike = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '로그인이 필요합니다.',
+      });
+      return id;
     }
     return dispatch({
       type: LIKE_POST_REQUEST,
       data: post.id,
     });
   }, [id]);
+
   const onUnlike = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '로그인이 필요합니다.',
+      });
+      return id;
     }
+
     return dispatch({
       type: UNLIKE_POST_REQUEST,
       data: post.id,
@@ -44,7 +57,12 @@ const PostCard = ({ post }) => {
 
   const onRemovePost = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '로그인이 필요합니다.',
+      });
+      return id;
     }
     return dispatch({
       type: REMOVE_POST_REQUEST,
@@ -54,7 +72,12 @@ const PostCard = ({ post }) => {
 
   const onRetweet = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '로그인이 필요합니다.',
+      });
+      return id;
     }
     return dispatch({
       type: RETWEET_REQUEST,
