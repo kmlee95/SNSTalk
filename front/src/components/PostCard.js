@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
 import {
-  RetweetOutlined,
+  ShareAltOutlined,
   HeartOutlined,
   MessageOutlined,
   EllipsisOutlined,
@@ -98,12 +98,12 @@ const PostCard = ({ post }) => {
       <Card
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
-          <RetweetOutlined key="retweet" onClick={onRetweet} />,
           liked ? (
             <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
           ) : (
             <HeartOutlined key="heart" onClick={onLike} />
           ),
+          <ShareAltOutlined key="share" onClick={onRetweet} />,
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
@@ -130,7 +130,7 @@ const PostCard = ({ post }) => {
             <Link href={`/user/${post.User.id}`}>
               <a>
                 {post.RetweetId ? <Avatar>{post.User.nickname[0]}</Avatar> : <Avatar icon={<UserOutlined />} />}
-
+                {'  '}
                 {`${post.User.nickname}${post.RetweetId ? '님이 공유한 게시글 입니다.' : ''}`}
               </a>
             </Link>

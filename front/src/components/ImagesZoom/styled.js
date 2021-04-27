@@ -1,14 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
-
-export const Global = createGlobalStyle`
-  .slick-slide {
-    display: inline-block;
-  }
-  .ant-card-cover {
-    transform: none !important; //transform 안에 fixed가 들어가면 잡지를 못한다. 그래서 해제시켜준다.
-  }
-`;
 
 export const Overlay = styled.div`
   position: fixed;

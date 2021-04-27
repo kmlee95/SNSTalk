@@ -117,7 +117,18 @@ export const MenuWrapper = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+
   & img {
     height: 32px;
+  }
+`;
+
+export const MainContents = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+
+  @media (max-width: ${(props) => props.theme.BREAK_POINT.TABLET}px) {
+    width: 100%;
   }
 `;

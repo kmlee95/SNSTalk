@@ -20,4 +20,11 @@ export const GolbalStyle = createGlobalStyle`
   /* a-style */
   a {color: #000000; text-decoration: none; outline: none}
   a:hover, a:active {text-decoration: none; color:#000000;}
+
+  .slick-slide {
+    display: inline-block;
+  }
+  .ant-card-cover {
+    transform: none !important; //transform 안에 fixed가 들어가면 잡지를 못한다. 그래서 해제시켜준다.
+  }
 `;

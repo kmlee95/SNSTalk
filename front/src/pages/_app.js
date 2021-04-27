@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 
 import wrapper from '../store/configureStore';
 import theme from '../theme';
+import AppLayout from '../components/AppLayout';
 
 const SnsTalk = ({ Component }) => {
   return (
@@ -14,7 +15,9 @@ const SnsTalk = ({ Component }) => {
         <meta charSet="utf=8" />
         <title>SnsTalk</title>
       </Head>
-      <Component />
+      <AppLayout>
+        <Component />
+      </AppLayout>
     </ThemeProvider>
   );
 };

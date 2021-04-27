@@ -1,6 +1,5 @@
 import React, { useCallback, memo } from 'react';
 import Link from 'next/link';
-import { Menu, Input } from 'antd';
 import Router from 'next/router';
 import { message } from 'antd';
 
@@ -24,7 +23,9 @@ const Header = memo(({ userInfo }) => {
       <div>
         <MenuWrapper>
           <Link href="/">
-            <a>홈</a>
+            <a>
+              <img src="/favicon.ico" alt="logo" />
+            </a>
           </Link>
           <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </MenuWrapper>

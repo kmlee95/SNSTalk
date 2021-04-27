@@ -74,7 +74,7 @@ const Signup = () => {
   }, [email, password, passwordCheck, term]);
 
   return (
-    <AppLayout>
+    <>
       <Head>
         <title>회원가입 | NodeBird</title>
       </Head>
@@ -118,7 +118,7 @@ const Signup = () => {
           </Button>
         </div>
       </Form>
-    </AppLayout>
+    </>
   );
 };
 
