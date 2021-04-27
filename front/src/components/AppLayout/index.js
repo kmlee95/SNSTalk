@@ -13,7 +13,7 @@ const AppLayout = ({ children }) => {
     <div>
       <Header userInfo={me} />
       <Section>
-        <MainContents> {children}</MainContents>
+        <MainContents>{children}</MainContents>
       </Section>
       <Footer />
     </div>

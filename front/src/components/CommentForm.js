@@ -14,18 +14,16 @@ const CommentForm = ({ post }) => {
 
   const onSubmitComment = useCallback(() => {
     if (!id) {
-      Swal.fire({
+      return Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: '로그인이 필요합니다.',
       });
-      return id;
     }
 
-    // e.preventDefault();
-    // if (!commentText || !commentText.trim()) {
-    //   return message.error('댓글의 내용을 입력해주세요!');
-    // }
+    if (!commentText || !commentText.trim()) {
+      return message.error('댓글의 내용을 입력해주세요!');
+    }
 
     dispatch({
       type: ADD_COMMENT_REQUEST,

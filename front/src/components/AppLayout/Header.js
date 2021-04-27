@@ -5,6 +5,7 @@ import { message } from 'antd';
 
 import useInput from '../../hooks/useInput';
 import UnSignInMenu from './UnSignInMenu';
+import SignMenu from './SignMenu';
 import { HeaderWrapper, SearchInput, MenuWrapper } from './styled';
 
 const Header = memo(({ userInfo }) => {
@@ -29,13 +30,7 @@ const Header = memo(({ userInfo }) => {
           </Link>
           <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </MenuWrapper>
-        {userInfo ? (
-          <Link href="/profile">
-            <a>프로필</a>
-          </Link>
-        ) : (
-          <UnSignInMenu />
-        )}
+        {userInfo ? <SignMenu info={userInfo} /> : <UnSignInMenu />}
       </div>
     </HeaderWrapper>
   );

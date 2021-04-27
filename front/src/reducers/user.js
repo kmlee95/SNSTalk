@@ -16,21 +16,27 @@ export const initialState = {
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
+
   logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
   logOutError: null,
+
   signUpLoading: false, // 회원가입 시도중
   signUpDone: false,
   signUpError: null,
+
   changeNicknameLoading: false, // 닉네임 변경 시도중
   changeNicknameDone: false,
   changeNicknameError: null,
+
   loadFollowingsLoading: false,
   loadFollowingsDone: false,
   loadFollowingsError: null,
+
   loadFollowersLoading: false,
   loadFollowersDone: false,
   loadFollowersError: null,
+
   removeFollowerLoading: false,
   removeFollowerDone: false,
   removeFollowerError: null,

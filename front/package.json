@@ -12,6 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.4.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@next/bundle-analyzer": "^10.0.8",
     "antd": "^4.11.2",
     "axios": "^0.21.1",

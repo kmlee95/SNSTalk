@@ -8,7 +8,6 @@ import { LOAD_HASHTAG_POSTS_REQUEST } from '../../reducers/post';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
-import AppLayout from '../../components/AppLayout';
 
 const Hashtag = () => {
   const dispatch = useDispatch();
@@ -35,18 +34,16 @@ const Hashtag = () => {
   }, [mainPosts.length, hasMorePosts, tag]);
 
   return (
-    <AppLayout>
+    <>
       {mainPosts.map((c) => (
         <PostCard key={c.id} post={c} />
       ))}
-    </AppLayout>
+    </>
   );
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log(context);
   const cookie = context.req ? context.req.headers.cookie : '';
-  console.log(context);
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;

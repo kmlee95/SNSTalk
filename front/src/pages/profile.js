@@ -6,7 +6,6 @@ import { END } from 'redux-saga';
 import axios from 'axios';
 import useSWR from 'swr';
 
-import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
@@ -56,21 +55,20 @@ const Profile = () => {
       <Head>
         <title>내 프로필 | SnsTalk</title>
       </Head>
-      <AppLayout>
-        <NicknameEditForm />
-        <FollowList
-          header="팔로잉"
-          data={followingsData}
-          onClickMore={loadMoreFollowings}
-          loading={!followingError && !followingsData}
-        />
-        <FollowList
-          header="팔로워"
-          data={followersData}
-          onClickMore={loadMoreFollowers}
-          loading={!followerError && !followersData}
-        />
-      </AppLayout>
+
+      <NicknameEditForm />
+      <FollowList
+        header="팔로잉"
+        data={followingsData}
+        onClickMore={loadMoreFollowings}
+        loading={!followingError && !followingsData}
+      />
+      <FollowList
+        header="팔로워"
+        data={followersData}
+        onClickMore={loadMoreFollowers}
+        loading={!followerError && !followersData}
+      />
     </>
   );
 };

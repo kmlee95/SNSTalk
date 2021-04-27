@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import PostForm from '../components/PostForm';
+import WritePostForm from '../components/WritePostForm';
 import PostCard from '../components/PostCard';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
@@ -40,7 +40,7 @@ const Home = () => {
 
   return (
     <>
-      {me && <PostForm />}
+      {me && <WritePostForm />}
       {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}

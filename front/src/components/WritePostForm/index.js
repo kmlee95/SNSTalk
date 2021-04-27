@@ -2,7 +2,8 @@ import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../reducers/post';
+import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE } from '../../reducers/post';
+import { FormWrapper } from './styled';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -20,20 +21,24 @@ const PostForm = () => {
     }
   }, [addPostDone]);
 
-  const onSubmit = useCallback(() => {
-    if (!text || !text.trim()) {
-      return alert('게시글을 작성하세요.');
-    }
-    const formData = new FormData();
-    imagePaths.forEach((p) => {
-      formData.append('image', p); //req.body.image
-    });
-    formData.append('content', text); //req.body.content
-    return dispatch({
-      type: ADD_POST_REQUEST,
-      data: formData,
-    });
-  }, [text, imagePaths]);
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (!text || !text.trim()) {
+        return alert('게시글을 작성하세요.');
+      }
+      const formData = new FormData();
+      imagePaths.forEach((p) => {
+        formData.append('image', p); //req.body.image
+      });
+      formData.append('content', text); //req.body.content
+      return dispatch({
+        type: ADD_POST_REQUEST,
+        data: formData,
+      });
+    },
+    [text, imagePaths],
+  );
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
@@ -56,13 +61,13 @@ const PostForm = () => {
   });
 
   return (
-    <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
-      <Input.TextArea maxLength={140} placeholder="어떤 신기한 일이 있었나요?" value={text} onChange={onChangeText} />
-      <div>
+    <FormWrapper style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onSubmit={onSubmit}>
+      <Input.TextArea maxLength={140} value={text} onChange={onChangeText} />
+      <div className="post-form-button">
         <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
         <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={addPostLoading}>
-          올리기
+          작성
         </Button>
       </div>
       <div>
@@ -75,7 +80,7 @@ const PostForm = () => {
           </div>
         ))}
       </div>
-    </Form>
+    </FormWrapper>
   );
 };
 
