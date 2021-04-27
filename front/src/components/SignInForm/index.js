@@ -6,7 +6,7 @@ import useInput from '../../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginRequestAction } from '../../reducers/user';
 import { FormWarraper } from './styled';
-import Input from './input';
+import Input from './Input';
 
 const SignInForm = () => {
   const { logInLoading, logInError } = useSelector((state) => state.user);

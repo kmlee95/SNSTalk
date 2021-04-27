@@ -16,7 +16,7 @@ const Post = () => {
   const { id } = router.query; //post/1 일 경우 1을 가져온다.
 
   return (
-    <AppLayout>
+    <>
       <Head>
         <title>
           {singlePost.User.nickname}
@@ -32,7 +32,7 @@ const Post = () => {
         <meta property="og:url" content={`https://nodebird.com/post/${id}`} />
       </Head>
       <PostCard post={singlePost} />
-    </AppLayout>
+    </>
   );
 };
 

@@ -10,7 +10,6 @@ import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
 import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
-import AppLayout from '../../components/AppLayout';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -38,7 +37,7 @@ const User = () => {
   }, [mainPosts.length, hasMorePosts, id]);
 
   return (
-    <AppLayout>
+    <>
       {userInfo && (
         <Head>
           <title>
@@ -78,7 +77,7 @@ const User = () => {
       {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
-    </AppLayout>
+    </>
   );
 };
 
