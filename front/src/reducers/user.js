@@ -4,15 +4,19 @@ export const initialState = {
   loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
   loadMyInfoDone: false,
   loadMyInfoError: null,
+
   loadUserLoading: false, // 유저 정보 가져오기 시도중
   loadUserDone: false,
   loadUserError: null,
+
   followLoading: false, // 팔로우 시도중
   followDone: false,
   followError: null,
+
   unfollowLoading: false, // 언팔로우 시도중
   unfollowDone: false,
   unfollowError: null,
+
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
@@ -59,10 +63,6 @@ export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
 export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
 export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
-
-export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
-export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
-export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
@@ -228,19 +228,6 @@ const reducer = (state = initialState, action) =>
       case LOG_OUT_FAILURE:
         draft.logOutLoading = false;
         draft.logOutError = action.error;
-        break;
-      case SIGN_UP_REQUEST:
-        draft.signUpLoading = true;
-        draft.signUpError = null;
-        draft.signUpDone = false;
-        break;
-      case SIGN_UP_SUCCESS:
-        draft.signUpLoading = false;
-        draft.signUpDone = true;
-        break;
-      case SIGN_UP_FAILURE:
-        draft.signUpLoading = false;
-        draft.signUpError = action.error;
         break;
       case CHANGE_NICKNAME_REQUEST:
         draft.changeNicknameLoading = true;
