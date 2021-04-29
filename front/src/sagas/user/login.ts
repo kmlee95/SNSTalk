@@ -4,7 +4,7 @@ import { LogInData } from '@src/types/user';
 import { LOG_IN_REQUEST, logInSuccess, logInFailure, LogInRequest } from '@reducers/user/login';
 
 function signInAPI(LogInData: LogInData) {
-  return axios.post('/user/signin', LogInData, { withCredentials: true });
+  return axios.post('/user/login', LogInData, { withCredentials: true });
 }
 
 function* signIn(action: LogInRequest) {

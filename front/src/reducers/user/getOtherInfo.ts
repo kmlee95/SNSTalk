@@ -1,6 +1,6 @@
 /* 특정 사람 검색 */
 
-import { UserInfo } from './index';
+import { UserInfo } from '@src/types/user';
 
 export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST' as const;
 export const LOAD_USER_SUCCESS = 'LOAD_USER_SUCCESS' as const;

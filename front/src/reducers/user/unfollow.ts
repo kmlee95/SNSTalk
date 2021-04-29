@@ -1,4 +1,5 @@
 /*  unfollow(친구삭제) 처리 */
+import { UnFollowData } from '@src/types/user';
 
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST' as const;
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS' as const;
@@ -11,6 +12,7 @@ export interface UnFollowRequest {
 
 export interface UnFollowSuccess {
   type: typeof UNFOLLOW_SUCCESS;
+  data: UnFollowData;
 }
 
 export interface UnFollowFailure {
@@ -23,8 +25,9 @@ export const unFollowRequest = (data: number): UnFollowRequest => ({
   data,
 });
 
-export const unFollowSuccess = (): UnFollowSuccess => ({
+export const unFollowSuccess = (data: UnFollowData): UnFollowSuccess => ({
   type: UNFOLLOW_SUCCESS,
+  data,
 });
 
 export const unFollowFailure = (error: string): UnFollowFailure => ({

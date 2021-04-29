@@ -1,5 +1,6 @@
 import produce from 'immer';
 
+import { UserInfo, MeInfo } from '@src/types/user';
 import { SignUp, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from './signup';
 import { Login, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE } from './login';
 import { Follow, FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE } from './follow';
@@ -19,29 +20,6 @@ import {
   CHANGE_NICKNAME_SUCCESS,
   CHANGE_NICKNAME_FAILURE,
 } from './updateUserInfo';
-
-//한명의 유저 정보 확인
-export interface UserInfo {
-  email: string;
-  nickname: string;
-  createAt: string;
-  updateAt: string;
-  Posts: number;
-  Followings: number;
-  Followers: number;
-}
-
-//내 정보 확인
-export interface MeInfo {
-  id: number;
-  email: string;
-  nickname: string;
-  createAt: string;
-  updateAt: string;
-  Posts: string[]; //변경예정
-  Followings: string[]; //변경예정
-  Followers: string[]; //변경예정
-}
 
 export interface UserInitialState {
   userInfo: UserInfo | null;
@@ -246,6 +224,55 @@ const user = (state: UserInitialState = initialState, action: ReducerAction) => 
         draft.loadUserLoading = false;
         draft.loadUserError = action.error;
         break;
+
+      /* follow */
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followError = null;
+        draft.followDone = false;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.me.Followings.push({ id: action.data.UserId });
+        draft.followDone = true;
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.error;
+        break;
+
+      /* unfollow */
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowError = null;
+        draft.unfollowDone = false;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
+        draft.unfollowDone = true;
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.error;
+        break;
+
+      /* remove follow */
+      case REMOVE_FOLLOWER_REQUEST:
+        draft.removeFollowerLoading = true;
+        draft.removeFollowerError = null;
+        draft.removeFollowerDone = false;
+        break;
+      case REMOVE_FOLLOWER_SUCCESS:
+        draft.removeFollowerLoading = false;
+        draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
+        draft.removeFollowerDone = true;
+        break;
+      case REMOVE_FOLLOWER_FAILURE:
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerError = action.error;
+        break;
+
       default:
         break;
     }

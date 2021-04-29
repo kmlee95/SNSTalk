@@ -1,4 +1,5 @@
 /* follower 제거 */
+import { RemoveFollowData } from '@src/types/user';
 
 export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST' as const;
 export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS' as const;
@@ -11,6 +12,7 @@ export interface RemoveFollowRequest {
 
 export interface RemoveFollowSuccess {
   type: typeof REMOVE_FOLLOWER_SUCCESS;
+  data: RemoveFollowData;
 }
 
 export interface RemoveFollowFailure {
@@ -23,8 +25,9 @@ export const removeFollowRequest = (data: number): RemoveFollowRequest => ({
   data,
 });
 
-export const removeFollowSuccess = (): RemoveFollowSuccess => ({
+export const removeFollowSuccess = (data: RemoveFollowData): RemoveFollowSuccess => ({
   type: REMOVE_FOLLOWER_SUCCESS,
+  data,
 });
 
 export const removeFollowFailure = (error: string): RemoveFollowFailure => ({

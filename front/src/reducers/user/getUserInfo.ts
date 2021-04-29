@@ -1,6 +1,6 @@
 /* ssr에서 초기 내 정보 불러올 시 사용 */
 
-import { MeInfo } from './index';
+import { MeInfo } from '@src/types/user';
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST' as const;
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS' as const;

@@ -1,4 +1,5 @@
 /* follow(친구신청) 처리 */
+import { FollowData } from '@src/types/user';
 
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST' as const;
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS' as const;
@@ -11,6 +12,7 @@ export interface FollowRequest {
 
 export interface FollowSuccess {
   type: typeof FOLLOW_SUCCESS;
+  data: FollowData;
 }
 
 export interface FollowFailure {
@@ -23,8 +25,9 @@ export const followRequest = (data: number): FollowRequest => ({
   data,
 });
 
-export const followSuccess = (): FollowSuccess => ({
+export const followSuccess = (data: FollowData): FollowSuccess => ({
   type: FOLLOW_SUCCESS,
+  data,
 });
 
 export const followFailure = (error: string): FollowFailure => ({

@@ -1,4 +1,4 @@
-import { MeInfo } from './index';
+import { MeInfo } from '@src/types/user';
 import { LogInData } from '@src/types/user';
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST' as const;
