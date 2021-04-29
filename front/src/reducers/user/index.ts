@@ -2,17 +2,45 @@ import produce from 'immer';
 
 import { SignUp, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from './signup';
 import { Login, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE } from './login';
+import { Follow, FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE } from './follow';
+import { GetOtherInfo, LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE } from './getOtherInfo';
+import { GetUserInfo, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE } from './getUserInfo';
+import { Logout, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE } from './logout';
+import {
+  RemoveFollow,
+  REMOVE_FOLLOWER_SUCCESS,
+  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_FAILURE,
+} from './removeFollow';
+import { UnFollow, UNFOLLOW_SUCCESS, UNFOLLOW_REQUEST, UNFOLLOW_FAILURE } from './unfollow';
+import {
+  UpdateUserInfo,
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_NICKNAME_SUCCESS,
+  CHANGE_NICKNAME_FAILURE,
+} from './updateUserInfo';
 
+//한명의 유저 정보 확인
 export interface UserInfo {
   email: string;
   nickname: string;
-  password: string;
+  createAt: string;
+  updateAt: string;
+  Posts: number;
+  Followings: number;
+  Followers: number;
 }
 
+//내 정보 확인
 export interface MeInfo {
+  id: number;
   email: string;
   nickname: string;
-  password: string;
+  createAt: string;
+  updateAt: string;
+  Posts: string[]; //변경예정
+  Followings: string[]; //변경예정
+  Followers: string[]; //변경예정
 }
 
 export interface UserInitialState {
@@ -112,7 +140,16 @@ const initialState: UserInitialState = {
   removeFollowerError: null,
 };
 
-type ReducerAction = SignUp | Login;
+type ReducerAction =
+  | SignUp
+  | Login
+  | Follow
+  | GetOtherInfo
+  | GetUserInfo
+  | Logout
+  | RemoveFollow
+  | UnFollow
+  | UpdateUserInfo;
 
 const user = (state: UserInitialState = initialState, action: ReducerAction) => {
   return produce(state, (draft: UserInitialState) => {
@@ -130,6 +167,7 @@ const user = (state: UserInitialState = initialState, action: ReducerAction) => 
         draft.signUpLoading = false;
         draft.signUpError = action.error;
         break;
+      /* 로그인 */
       case LOG_IN_REQUEST:
         draft.logInLoading = true;
         draft.logInError = null;
@@ -143,6 +181,70 @@ const user = (state: UserInitialState = initialState, action: ReducerAction) => 
       case LOG_IN_FAILURE:
         draft.logInLoading = false;
         draft.logInError = action.error;
+        break;
+
+      /* 로그아웃 */
+      case LOG_OUT_REQUEST:
+        draft.logOutLoading = true;
+        draft.logOutError = null;
+        draft.logOutDone = false;
+        break;
+      case LOG_OUT_SUCCESS:
+        draft.logOutLoading = false;
+        draft.logOutDone = true;
+        draft.me = null;
+        break;
+      case LOG_OUT_FAILURE:
+        draft.logOutLoading = false;
+        draft.logOutError = action.error;
+        break;
+
+      /* 정보 수정 - 이름 */
+      case CHANGE_NICKNAME_REQUEST:
+        draft.changeNicknameLoading = true;
+        draft.changeNicknameError = null;
+        draft.changeNicknameDone = false;
+        break;
+      case CHANGE_NICKNAME_SUCCESS:
+        draft.me.nickname = action.data.nickname;
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = true;
+        break;
+      case CHANGE_NICKNAME_FAILURE:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameError = action.error;
+        break;
+
+      /* 현재 내 정보 */
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoError = null;
+        draft.loadMyInfoDone = false;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.me = action.data;
+        draft.loadMyInfoDone = true;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
+        break;
+
+      /* 특정 유저 정보 */
+      case LOAD_USER_REQUEST:
+        draft.loadUserLoading = true;
+        draft.loadUserError = null;
+        draft.loadUserDone = false;
+        break;
+      case LOAD_USER_SUCCESS:
+        draft.loadUserLoading = false;
+        draft.userInfo = action.data;
+        draft.loadUserDone = true;
+        break;
+      case LOAD_USER_FAILURE:
+        draft.loadUserLoading = false;
+        draft.loadUserError = action.error;
         break;
       default:
         break;

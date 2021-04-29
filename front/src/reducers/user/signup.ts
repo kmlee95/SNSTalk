@@ -1,6 +1,5 @@
 import { SignUpData } from '@src/types/user';
 
-//CHATROOM request reducer
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST' as const;
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS' as const;
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE' as const;
@@ -19,16 +18,16 @@ export interface SignUpFailure {
   error: string;
 }
 
-export const signUpRequest = (data: SignUpData) => ({
+export const signUpRequest = (data: SignUpData): SignUpRequest => ({
   type: SIGN_UP_REQUEST,
   data,
 });
 
-export const signUpSuccess = () => ({
+export const signUpSuccess = (): SignUpSuccess => ({
   type: SIGN_UP_SUCCESS,
 });
 
-export const signUpFailure = (error: string) => ({
+export const signUpFailure = (error: string): SignUpFailure => ({
   type: SIGN_UP_FAILURE,
   error,
 });
