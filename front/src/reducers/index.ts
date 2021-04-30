@@ -1,11 +1,11 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
 import user, { UserInitialState } from './user';
-import post from './post';
+import post, { PostInitailState } from './post';
 
 export interface RootState {
   user: UserInitialState;
-  post: any;
+  post: PostInitailState;
 }
 
 //생성된 reducer Input
