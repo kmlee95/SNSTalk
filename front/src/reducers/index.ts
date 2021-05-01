@@ -1,7 +1,8 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { combineReducers } from 'redux';
-import user, { UserInitialState } from './user';
-import post, { PostInitailState } from './post';
+import user from './user';
+import post from './post';
+import { UserInitialState, PostInitailState } from '@src/types/initState';
 
 export interface RootState {
   user: UserInitialState;
