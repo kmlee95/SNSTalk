@@ -1,25 +1,26 @@
 import React, { useCallback } from 'react';
 import { Button } from 'antd';
-import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user';
 
-const FollowButton = ({ post }) => {
+import { RootState } from '@reducers/.';
+import { followRequest } from '@reducers/user/follow';
+import { unFollowRequest } from '@reducers/user/unfollow';
+import { SinglePostData } from '@src/types/post';
+
+interface FollowButtonProps {
+  post: SinglePostData;
+}
+
+const FollowButton = ({ post }: FollowButtonProps) => {
   const dispatch = useDispatch();
-  const { me, followLoading, unfollowLoading } = useSelector((state) => state.user);
+  const { me, followLoading, unfollowLoading } = useSelector((state: RootState) => state.user);
 
   const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
   const onClickButton = useCallback(() => {
     if (isFollowing) {
-      dispatch({
-        type: UNFOLLOW_REQUEST,
-        data: post.User.id,
-      });
+      dispatch(unFollowRequest(post.User.id));
     } else {
-      dispatch({
-        type: FOLLOW_REQUEST,
-        data: post.User.id,
-      });
+      dispatch(followRequest(post.User.id));
     }
   }, [isFollowing]);
 
@@ -31,10 +32,6 @@ const FollowButton = ({ post }) => {
       {isFollowing ? '친구삭제' : '친구신청'}
     </Button>
   );
-};
-
-FollowButton.propTypes = {
-  post: PropTypes.object.isRequired,
 };
 
 export default FollowButton;

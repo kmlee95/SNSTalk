@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Slick from 'react-slick';
-import { backUrl } from '../../config/config';
+import { backUrl } from '@config/.';
 
 import { Overlay, Header, CloseBtn, ImgWrapper, Indicator, SlickWrapper } from './styled';
+import { PostImage } from '@src/types/post';
 
-const ImagesZoom = ({ images, onClose }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+interface ImagesZoomProps {
+  images: PostImage[];
+  onClose: (e: React.MouseEvent<HTMLElement>) => void;
+}
+
+const ImagesZoom = ({ images, onClose }: ImagesZoomProps) => {
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
   return (
     <Overlay>
       <Header>
@@ -39,11 +45,6 @@ const ImagesZoom = ({ images, onClose }) => {
       </SlickWrapper>
     </Overlay>
   );
-};
-
-ImagesZoom.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onClose: PropTypes.func.isRequired,
 };
 
 export default ImagesZoom;

@@ -1,13 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import Header from './Header';
-import Footer from './footer';
+import Footer from './Footer';
 import { Section, MainContents } from './styled';
+import { RootState } from '@reducers/.';
 
-const AppLayout = ({ children }) => {
-  const { me } = useSelector((state) => state.user);
+interface AppLayoutProps {
+  children: React.ReactNode;
+}
+
+const AppLayout = ({ children }: AppLayoutProps) => {
+  const { me } = useSelector((state: RootState) => state.user);
 
   return (
     <div>
@@ -18,10 +22,6 @@ const AppLayout = ({ children }) => {
       <Footer />
     </div>
   );
-};
-
-AppLayout.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default AppLayout;

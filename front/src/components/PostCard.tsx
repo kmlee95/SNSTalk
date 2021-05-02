@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Popover, Button, Avatar, List, Comment } from 'antd';
 import {
@@ -17,16 +16,27 @@ import Swal from 'sweetalert2';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
-import { LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
 import FollowButton from './FollowButton';
+
+import { RootState } from '@reducers/.';
+
+import { likePostRequest } from '@reducers/post/likePost';
+import { removePostRequest } from '@reducers/post/removePost';
+import { unLikePostRequest } from '@reducers/post/unlikePost';
+import { retweetRequest } from '@reducers/post/retweet';
+import { SinglePostData } from '@src/types/post';
 
 moment.locale('ko');
 
-const PostCard = ({ post }) => {
+interface PostCardProps {
+  post: SinglePostData;
+}
+
+const PostCard = ({ post }: PostCardProps) => {
   const dispatch = useDispatch();
-  const { removePostLoading } = useSelector((state) => state.post);
-  const [commentFormOpened, setCommentFormOpened] = useState(false);
-  const id = useSelector((state) => state.user.me?.id);
+  const { removePostLoading } = useSelector((state: RootState) => state.post);
+  const [commentFormOpened, setCommentFormOpened] = useState<boolean>(false);
+  const id = useSelector((state: RootState) => state.user.me?.id);
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -37,10 +47,7 @@ const PostCard = ({ post }) => {
       });
       return id;
     }
-    return dispatch({
-      type: LIKE_POST_REQUEST,
-      data: post.id,
-    });
+    return dispatch(likePostRequest(post.id));
   }, [id]);
 
   const onUnlike = useCallback(() => {
@@ -53,11 +60,9 @@ const PostCard = ({ post }) => {
       return id;
     }
 
-    return dispatch({
-      type: UNLIKE_POST_REQUEST,
-      data: post.id,
-    });
+    return dispatch(unLikePostRequest(post.id));
   }, [id]);
+
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
@@ -71,10 +76,7 @@ const PostCard = ({ post }) => {
       });
       return id;
     }
-    return dispatch({
-      type: REMOVE_POST_REQUEST,
-      data: post.id,
-    });
+    return dispatch(removePostRequest(post.id));
   }, [id]);
 
   const onRetweet = useCallback(() => {
@@ -86,17 +88,14 @@ const PostCard = ({ post }) => {
       });
       return id;
     }
-    return dispatch({
-      type: RETWEET_REQUEST,
-      data: post.id,
-    });
+    return dispatch(retweetRequest(post.id));
   }, [id]);
 
   const liked = post.Likers.find((v) => v.id === id);
   return (
     <div style={{ marginBottom: 20 }}>
       <Card
-        cover={post.Images[0] && <PostImages images={post.Images} />}
+        cover={post.Images && <PostImages images={post.Images} />}
         actions={[
           liked ? (
             <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
@@ -112,7 +111,7 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>
+                    <Button type="primary" loading={removePostLoading} onClick={onRemovePost}>
                       삭제
                     </Button>
                   </>
@@ -139,7 +138,7 @@ const PostCard = ({ post }) => {
         extra={id && <FollowButton post={post} />}
       >
         {post.RetweetId && post.Retweet ? (
-          <Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
+          <Card cover={post.Retweet.Images && <PostImages images={post.Retweet.Images} />}>
             <span style={{ float: 'right' }}>{moment(post.createdAt).format('YYYY.MM.DD.')}</span>
             <Card.Meta
               avatar={
@@ -197,20 +196,6 @@ const PostCard = ({ post }) => {
       )}
     </div>
   );
-};
-
-PostCard.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.number,
-    User: PropTypes.object,
-    content: PropTypes.string,
-    createdAt: PropTypes.string,
-    Comments: PropTypes.arrayOf(PropTypes.object),
-    Images: PropTypes.arrayOf(PropTypes.object),
-    Likers: PropTypes.arrayOf(PropTypes.object),
-    RetweetId: PropTypes.number,
-    Retweet: PropTypes.objectOf(PropTypes.any),
-  }).isRequired,
 };
 
 export default PostCard;
