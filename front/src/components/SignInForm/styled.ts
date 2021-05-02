@@ -34,7 +34,7 @@ export const FormWarraper = styled.form`
   }
 `;
 
-export const InputWrapper = styled.div`
+export const InputWrapper = styled.div<{ focus: boolean }>`
   border: 1px solid ${(props) => (props.focus ? props.theme.INPUT_FOCUS_COLOR : props.theme.LIGHT_GREY)};
   padding: 10px 14px;
   margin-bottom: 14px;

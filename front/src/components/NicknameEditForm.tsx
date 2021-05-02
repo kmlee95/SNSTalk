@@ -2,19 +2,17 @@ import { Form, Input } from 'antd';
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import useInput from '../hooks/useInput';
-import { CHANGE_NICKNAME_REQUEST } from '../reducers/user';
+import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/.';
+import { changeNicknameRequest } from '@reducers/user/updateUserInfo';
 
 const NicknameEditForm = () => {
-  const { me } = useSelector((state) => state.user);
+  const { me } = useSelector((state: RootState) => state.user);
   const [nickname, onChangeNickname] = useInput(me?.nickname || '');
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(() => {
-    dispatch({
-      type: CHANGE_NICKNAME_REQUEST,
-      data: nickname,
-    });
+    dispatch(changeNicknameRequest(nickname));
   }, [nickname]);
 
   return (

@@ -1,24 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { List, Button, Card } from 'antd';
 import { StopOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 
-import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from '../reducers/user';
+import { unFollowRequest } from '@reducers/user/unfollow';
+import { removeFollowRequest } from '@reducers/user/removeFollow';
 
-const FollowList = ({ header, data, onClickMore, loading }) => {
+interface FollowListProps {
+  header: string;
+  data: string[];
+  onClickMore: (e: React.MouseEvent<HTMLElement>) => void;
+  loading: boolean;
+}
+
+const FollowList = ({ header, data, onClickMore, loading }: FollowListProps) => {
   const dispatch = useDispatch();
   const onCancel = (id) => () => {
     if (header === '팔로잉') {
-      dispatch({
-        type: UNFOLLOW_REQUEST,
-        data: id,
-      });
+      dispatch(unFollowRequest(id));
     }
-    dispatch({
-      type: REMOVE_FOLLOWER_REQUEST,
-      data: id,
-    });
+    dispatch(removeFollowRequest(id));
   };
 
   return (
@@ -38,20 +39,13 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
       dataSource={data}
       renderItem={(item) => (
         <List.Item style={{ marginTop: 20 }}>
-          <Card actions={[<StopOutlined key="stop" onClick={onCancel(item.id)} />]}>
-            <Card.Meta description={item.nickname} />
+          <Card actions={[<StopOutlined key="stop" onClick={onCancel(item)} />]}>
+            <Card.Meta description={item} />
           </Card>
         </List.Item>
       )}
     />
   );
-};
-
-FollowList.propTypes = {
-  header: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,
-  onClickMore: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
 };
 
 export default FollowList;

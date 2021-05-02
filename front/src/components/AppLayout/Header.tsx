@@ -3,12 +3,17 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { message } from 'antd';
 
-import useInput from '../../hooks/useInput';
+import useInput from '@hooks/useInput';
 import UnSignInMenu from './UnSignInMenu';
 import SignMenu from './SignMenu';
 import { HeaderWrapper, SearchInput, MenuWrapper } from './styled';
+import { MeInfo } from '@src/types/user';
 
-const Header = memo(({ userInfo }) => {
+interface HeaderProps {
+  userInfo: MeInfo;
+}
+
+const Header = memo(({ userInfo }: HeaderProps) => {
   const [searchInput, onChangeSearchInput] = useInput('');
 
   const onSearch = useCallback(() => {

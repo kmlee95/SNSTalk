@@ -6,22 +6,25 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import axios from 'axios';
-import { LOAD_USER_POSTS_REQUEST } from '../../reducers/post';
-import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
-import PostCard from '../../components/PostCard';
-import wrapper from '../../store/configureStore';
+import { LOAD_USER_POSTS_REQUEST } from '@reducers/post/';
+import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
+import { loadUserRequest } from '@reducers/user/getOtherInfo';
+import PostCard from '@components/PostCard';
+import wrapper from '@store/configureStore';
+
+import { RootState } from '@reducers/.';
 
 const User = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  const { mainPosts, hasMorePosts, loadUserPostsLoading } = useSelector((state) => state.post);
-  const { userInfo } = useSelector((state) => state.user);
+  const { mainPosts, hasMorePosts } = useSelector((state: RootState) => state.post);
+  const { userInfo } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const onScroll = () => {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts && !loadUserPostsLoading) {
+        if (hasMorePosts) {
           dispatch({
             type: LOAD_USER_POSTS_REQUEST,
             lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
@@ -91,15 +94,10 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_USER_POSTS_REQUEST,
     data: context.params.id,
   });
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_USER_REQUEST,
-    data: context.params.id,
-  });
+  context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(loadUserRequest(Number(context.params.id)));
   context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
 
   return { props: {} };
 });

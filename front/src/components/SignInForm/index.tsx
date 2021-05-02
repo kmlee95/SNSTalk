@@ -2,14 +2,15 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, message } from 'antd';
 import Link from 'next/link';
 
-import useInput from '../../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginRequestAction } from '../../reducers/user';
+import { logInRequest } from '@reducers/user/login';
+import useInput from '@hooks/useInput';
+import { RootState } from '@reducers/.';
 import { FormWarraper } from './styled';
 import Input from './Input';
 
 const SignInForm = () => {
-  const { logInLoading, logInError } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
@@ -18,7 +19,7 @@ const SignInForm = () => {
   const onSubmitForm = useCallback(
     (e) => {
       e.preventDefault();
-      dispatch(loginRequestAction({ email, password }));
+      dispatch(logInRequest({ email, password }));
     },
     [email, password],
   );

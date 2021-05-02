@@ -2,7 +2,7 @@ interface PostUser {
   id: number;
   nickname: string;
 }
-interface PostImage {
+export interface PostImage {
   id: number;
   PostId: number;
   src: string;
@@ -11,7 +11,7 @@ interface PostImage {
 }
 interface PostRetweet {
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
 }
 interface PostLikser {
   id: number;
@@ -20,15 +20,18 @@ interface PostLikser {
 // 하나의 포스트 조회(singlePost) return
 export interface SinglePostData {
   id: number;
-  UserId: number;
 
   User: PostUser;
-  Image: PostImage[];
-  Comment: PostUser[];
-  Likers: number[]; //userId
+  Images: PostImage[];
+  Comments: PostUser[];
+  Retweet: PostRetweet[];
+  Likers: PostLikser[];
+
   content: string;
   createdAt: string;
   updatedAt: string;
+  UserId: number;
+  RetweetId: string;
 }
 
 // 모든 포스트 조회(mainPost) return
@@ -36,7 +39,7 @@ export interface AllPostData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
   Comments: PostUser[];
   Retweet: PostRetweet[];
   Likers: PostLikser[];
@@ -56,14 +59,14 @@ export interface LikePostChange {
 
 //Add post
 export interface AddPostInputData {
-  image: string | null;
+  Images: string | null;
   content: string;
 }
 export interface AddPostOutputData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
   Comments: PostUser[];
   Retweet: PostRetweet[];
   Likers: PostLikser[];
@@ -83,7 +86,7 @@ export interface UpdatePostOutputData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[] | null;
+  Images: PostImage[] | null;
   Comment: PostUser[] | null;
   Likers: PostLikser[];
 
@@ -93,8 +96,8 @@ export interface UpdatePostOutputData {
 //Comment
 export interface AddCommentInputData {
   content: string;
-  postId: string;
-  userId: string;
+  postId: number;
+  userId: number;
 }
 export interface AddCommentOutputData {
   id: number;
@@ -106,7 +109,7 @@ export interface RetweetOutputData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
   Comments: PostUser[];
   Retweet: PostRetweet[];
   Likers: PostLikser[];
@@ -127,7 +130,7 @@ export interface HashTagOutputData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
   Comments: PostUser[];
   Retweet: PostRetweet[];
   Likers: PostLikser[];
