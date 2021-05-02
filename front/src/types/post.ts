@@ -56,7 +56,7 @@ export interface LikePostChange {
 
 //Add post
 export interface AddPostInputData {
-  image?: string;
+  image: string | null;
   content: string;
 }
 export interface AddPostOutputData {
@@ -125,8 +125,16 @@ export interface HashTagInputData {
 }
 export interface HashTagOutputData {
   id: number;
+
   User: PostUser;
-  Image: PostImage[] | null;
-  Likers: PostLikser[] | null;
-  Retweet: PostRetweet[] | null;
+  Image: PostImage[];
+  Comments: PostUser[];
+  Retweet: PostRetweet[];
+  Likers: PostLikser[];
+
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  UserId: number;
+  RetweetId: string;
 }

@@ -4,9 +4,9 @@ export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST' as const;
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS' as const;
 export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE' as const;
 
-export interface LostPostsRequest {
+export interface LoadPostsRequest {
   type: typeof LOAD_POSTS_REQUEST;
-  data?: number; //lastId가 있거나 없거나..
+  data: number | null; //lastId가 있거나 없거나..
 }
 
 export interface LoadPostsSuccess {
@@ -19,7 +19,7 @@ export interface LoadPostFailure {
   error: string;
 }
 
-export const loadPostsRequest = (data?: number): LostPostsRequest => ({
+export const loadPostsRequest = (data?: number): LoadPostsRequest => ({
   type: LOAD_POSTS_REQUEST,
   data,
 });

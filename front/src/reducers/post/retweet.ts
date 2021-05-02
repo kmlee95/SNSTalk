@@ -19,22 +19,22 @@ export interface RetweetFailure {
   error: string;
 }
 
-export const RetweetRequest = (data: number): RetweetRequest => ({
+export const retweetRequest = (data: number): RetweetRequest => ({
   type: RETWEET_REQUEST,
   data,
 });
 
-export const RetweetSuccess = (data: RetweetOutputData): RetweetSuccess => ({
+export const retweetSuccess = (data: RetweetOutputData): RetweetSuccess => ({
   type: RETWEET_SUCCESS,
   data,
 });
 
-export const RetweetFailure = (error: string): RetweetFailure => ({
+export const retweetFailure = (error: string): RetweetFailure => ({
   type: RETWEET_FAILURE,
   error,
 });
 
 export type Retweet =
-  | ReturnType<typeof RetweetRequest>
-  | ReturnType<typeof RetweetSuccess>
-  | ReturnType<typeof RetweetFailure>;
+  | ReturnType<typeof retweetRequest>
+  | ReturnType<typeof retweetSuccess>
+  | ReturnType<typeof retweetFailure>;

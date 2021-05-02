@@ -6,7 +6,8 @@ export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
 
 export interface GetHashTagRequest {
   type: typeof LOAD_HASHTAG_POSTS_REQUEST;
-  data: HashTagInputData;
+  data: string;
+  lastId: string;
 }
 
 export interface GetHashTagSuccess {
@@ -19,9 +20,10 @@ export interface GetHashTagFailure {
   error: string;
 }
 
-export const getHashTagRequest = (data: HashTagInputData): GetHashTagRequest => ({
+export const getHashTagRequest = (data: string, lastId: string): GetHashTagRequest => ({
   type: LOAD_HASHTAG_POSTS_REQUEST,
   data,
+  lastId,
 });
 
 export const getHashTagSuccess = (data: HashTagOutputData[]): GetHashTagSuccess => ({
