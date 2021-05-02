@@ -1,12 +1,11 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, { DocumentContext, Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import { GolbalStyle } from '../theme/globalStyle';
 
-//_document는 app을 감싸는 최상단
-//getInitialProps => document에서만 사용
+import { GolbalStyle } from '@theme/globalStyle';
+
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx) {
+  static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
 

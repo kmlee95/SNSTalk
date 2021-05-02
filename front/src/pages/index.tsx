@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
-import WritePostForm from '../components/WritePostForm';
-import PostCard from '../components/PostCard';
-import { LOAD_POSTS_REQUEST } from '../reducers/post';
-import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
 import { END } from 'redux-saga';
 import axios from 'axios';
 
+import { RootState } from '@reducers/.';
+import WritePostForm from '@components/WritePostForm';
+import PostCard from '@components/PostCard';
+import { loadPostsRequest } from '@reducers/post/getAllPosts';
+
+import wrapper from '@store/configureStore';
+
 const Home = () => {
   const dispatch = useDispatch();
-  const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state) => state.post);
+  const { me } = useSelector((state: RootState) => state.user);
+  const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state: RootState) => state.post);
 
   useEffect(() => {
     if (retweetError) {
@@ -25,10 +26,7 @@ const Home = () => {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
-          dispatch({
-            type: LOAD_POSTS_REQUEST,
-            lastId,
-          });
+          dispatch(loadPostsRequest(lastId));
         }
       }
     }
@@ -56,16 +54,10 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_POSTS_REQUEST,
-  });
+  context.store.dispatch(loadPostsRequest());
   //위의 dispatch가 success 될 때까지 기다림
   context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
 });
 
 export default Home;

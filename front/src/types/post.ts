@@ -109,7 +109,7 @@ export interface RetweetOutputData {
   id: number;
 
   User: PostUser;
-  Image: PostImage[];
+  Images: PostImage[];
   Comments: PostUser[];
   Retweet: PostRetweet[];
   Likers: PostLikser[];

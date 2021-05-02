@@ -4,26 +4,26 @@ import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import axios from 'axios';
-import { LOAD_HASHTAG_POSTS_REQUEST } from '../../reducers/post';
-import PostCard from '../../components/PostCard';
-import wrapper from '../../store/configureStore';
-import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
+
+import PostCard from '@components/PostCard';
+import wrapper from '@store/configureStore';
+import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
+import { getHashTagRequest } from '@reducers/post/getHashTag';
+import { RootState } from '@reducers/.';
 
 const Hashtag = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { tag } = router.query;
-  const { mainPosts, hasMorePosts, loadHashtagPostsLoading } = useSelector((state) => state.post);
+  const { mainPosts, hasMorePosts } = useSelector((state: RootState) => state.post);
 
   useEffect(() => {
     const onScroll = () => {
       if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts && !loadHashtagPostsLoading) {
-          dispatch({
-            type: LOAD_HASHTAG_POSTS_REQUEST,
-            lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
-            data: tag,
-          });
+        if (hasMorePosts) {
+          dispatch(
+            getHashTagRequest(String(tag), mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id),
+          );
         }
       }
     };
@@ -48,15 +48,10 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_HASHTAG_POSTS_REQUEST,
-    data: context.params.tag,
-  });
+  context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(getHashTagRequest(String(context.params.tag)));
   context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
   return { props: {} };
 });
 

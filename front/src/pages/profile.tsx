@@ -6,17 +6,19 @@ import { END } from 'redux-saga';
 import axios from 'axios';
 import useSWR from 'swr';
 
-import NicknameEditForm from '../components/NicknameEditForm';
-import FollowList from '../components/FollowList';
-import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
-import { backUrl } from '../config/config';
+import NicknameEditForm from '@components/NicknameEditForm';
+import FollowList from '@components/FollowList';
+import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
+import wrapper from '@store/configureStore';
+import { backUrl } from '@config/.';
+import { RootState } from '@reducers/.';
 
-const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result) => result.data);
+const fetcher = (url: any) => axios.get(url, { withCredentials: true }).then((result) => result.data);
 
 const Profile = () => {
-  const [followingsLimit, setFollowingsLimit] = useState(3);
-  const [followersLimit, setFollowersLimit] = useState(3);
+  const [followingsLimit, setFollowingsLimit] = useState<number>(3);
+  const [followersLimit, setFollowersLimit] = useState<number>(3);
+
   const { data: followingsData, error: followingError } = useSWR(
     `${backUrl}/user/followings?limit=${followingsLimit}`,
     fetcher,
@@ -25,7 +27,8 @@ const Profile = () => {
     `${backUrl}/user/followers?limit=${followersLimit}`,
     fetcher,
   );
-  const { me } = useSelector((state) => state.user);
+
+  const { me } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (!(me && me.id)) {
@@ -74,19 +77,15 @@ const Profile = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log('getServerSideProps start');
-  console.log(context.req.headers);
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
+  context.store.dispatch(loadMyInfoRequest());
+
   context.store.dispatch(END);
-  console.log('getServerSideProps end');
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
 });
 
 export default Profile;

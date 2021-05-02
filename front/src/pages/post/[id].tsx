@@ -1,18 +1,19 @@
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import Head from 'next/head';
-import wrapper from '../../store/configureStore';
 import { END } from 'redux-saga';
 import axios from 'axios';
 
-import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
-import { LOAD_POST_REQUEST } from '../../reducers/post';
-import PostCard from '../../components/PostCard';
+import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
+import { loadPostRequest } from '@reducers/post/getOnePost';
+import PostCard from '@components/PostCard';
+import { RootState } from '@reducers/.';
+import wrapper from '@store/configureStore';
 
 const Post = () => {
-  const { singlePost } = useSelector((state) => state.post);
+  const { singlePost } = useSelector((state: RootState) => state.post);
   const router = useRouter();
-  const { id } = router.query; //post/1 일 경우 1을 가져온다.
+  const { id } = router.query;
 
   return (
     <>
@@ -42,15 +43,10 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_POST_REQUEST,
-    data: context.params.id,
-  });
+  context.store.dispatch(loadMyInfoRequest());
+  context.store.dispatch(loadPostRequest(Number(context.params.id)));
   context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
   return { props: {} };
 });
 

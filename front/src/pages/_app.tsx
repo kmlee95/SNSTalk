@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { AppProps } from 'next/app';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
 import { ThemeProvider } from 'styled-components';
 
-import wrapper from '../store/configureStore';
-import theme from '../theme';
-import AppLayout from '../components/AppLayout';
+import wrapper from '@store/configureStore';
+import theme from '@theme/.';
+import AppLayout from '@components/AppLayout';
 
-const SnsTalk = ({ Component }) => {
+const SnsTalk = ({ Component }: AppProps) => {
   return (
     <ThemeProvider theme={theme}>
       <Head>
@@ -20,10 +20,6 @@ const SnsTalk = ({ Component }) => {
       </AppLayout>
     </ThemeProvider>
   );
-};
-
-SnsTalk.propTypes = {
-  Component: PropTypes.elementType.isRequired,
 };
 
 export default wrapper.withRedux(SnsTalk);

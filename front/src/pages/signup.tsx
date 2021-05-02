@@ -4,12 +4,14 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-
-import useInput from '../hooks/useInput';
-import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
 import { END } from 'redux-saga';
 import axios from 'axios';
+
+import useInput from '@hooks/useInput';
+import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
+import { signUpRequest } from '@reducers/user/signup';
+import { RootState } from '@reducers/.';
+import wrapper from '@store/configureStore';
 
 const ErrorMessage = styled.div`
   color: red;
@@ -17,7 +19,7 @@ const ErrorMessage = styled.div`
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (me && me.id) {
@@ -42,7 +44,7 @@ const Signup = () => {
   const [password, onChangePassword] = useInput('');
 
   const [passwordCheck, setPasswordCheck] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
+  const [passwordError, setPasswordError] = useState<boolean>(false);
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
@@ -51,9 +53,9 @@ const Signup = () => {
     [password],
   );
 
-  const [term, setTerm] = useState('');
-  const [termError, setTermError] = useState(false);
-  const onChangeTerm = useCallback((e) => {
+  const [term, setTerm] = useState<boolean>(false);
+  const [termError, setTermError] = useState<boolean>(false);
+  const onChangeTerm = useCallback((e: any) => {
     setTerm(e.target.checked);
     setTermError(false);
   }, []);
@@ -66,10 +68,7 @@ const Signup = () => {
       return setTermError(true);
     }
 
-    dispatch({
-      type: SIGN_UP_REQUEST,
-      data: { email, password, nickname },
-    });
+    dispatch(signUpRequest({ email, password, nickname }));
   }, [email, password, passwordCheck, term]);
 
   return (
@@ -130,13 +129,11 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     axios.defaults.headers.Cookie = cookie;
   }
 
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
+  context.store.dispatch(loadMyInfoRequest());
 
   //위의 dispatch가 success 될 때까지 기다림
   context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
+  await (context.store as any).sagaTask.toPromise();
 });
 
 export default Signup;
