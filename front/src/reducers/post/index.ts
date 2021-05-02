@@ -1,105 +1,85 @@
-import produce from '../util/produce';
+import produce from 'immer';
 
-export const initialState = {
+import { PostInitailState } from '@src/types/initState';
+import { AddComment, ADD_COMMENT_SUCCESS, ADD_COMMENT_REQUEST, ADD_COMMENT_FAILURE } from './addComment';
+import { AddPost, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS } from './addPost';
+import { GetAllPost, LOAD_POSTS_FAILURE, LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS } from './getAllPosts';
+import {
+  GetHashTag,
+  LOAD_HASHTAG_POSTS_FAILURE,
+  LOAD_HASHTAG_POSTS_REQUEST,
+  LOAD_HASHTAG_POSTS_SUCCESS,
+} from './getHashTag';
+import { GetOnePost, LOAD_POST_FAILURE, LOAD_POST_REQUEST, LOAD_POST_SUCCESS } from './getOnePost';
+import { LikePost, LIKE_POST_FAILURE, LIKE_POST_REQUEST, LIKE_POST_SUCCESS } from './likePost';
+import { RemovePost, REMOVE_POST_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS } from './removePost';
+import { Retweet, RETWEET_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS } from './retweet';
+import { UnlikePost, UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS } from './unlikePost';
+import { UploadImage, UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS } from './upLoadImage';
+import { UpdatePost, UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS } from './updatePost';
+
+const initialState: PostInitailState = {
   mainPosts: [],
   singlePost: null,
   imagePaths: [],
   hasMorePosts: true,
+
   likePostLoading: false,
   likePostDone: false,
   likePostError: null,
+
   unlikePostLoading: false,
   unlikePostDone: false,
   unlikePostError: null,
+
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
+
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
+
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
+
   updatePostLoading: false,
   updatePostDone: false,
   updatePostError: null,
+
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
+
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+
   uploadImagesLoading: false,
   uploadImagesDone: false,
   uploadImagesError: null,
+
   retweetLoading: false,
   retweetDone: false,
   retweetError: null,
 };
 
-export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
-export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
-export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+type ReducerAction =
+  | AddComment
+  | AddPost
+  | GetAllPost
+  | GetHashTag
+  | GetOnePost
+  | LikePost
+  | RemovePost
+  | Retweet
+  | UnlikePost
+  | UploadImage
+  | UpdatePost;
 
-export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
-export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
-export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
-
-export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
-export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
-export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
-
-export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
-export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
-export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
-
-export const LOAD_USER_POSTS_REQUEST = 'LOAD_USER_POSTS_REQUEST';
-export const LOAD_USER_POSTS_SUCCESS = 'LOAD_USER_POSTS_SUCCESS';
-export const LOAD_USER_POSTS_FAILURE = 'LOAD_USER_POSTS_FAILURE';
-
-export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
-export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
-export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
-
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
-
-export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
-export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
-
-export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
-export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
-export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
-
-export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
-export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
-export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
-
-export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
-export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
-export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
-
-export const RETWEET_REQUEST = 'RETWEET_REQUEST';
-export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
-export const RETWEET_FAILURE = 'RETWEET_FAILURE';
-
-export const REMOVE_IMAGE = 'REMOVE_IMAGE';
-
-export const addPost = (data) => ({
-  type: ADD_POST_REQUEST,
-  data,
-});
-
-export const addComment = (data) => ({
-  type: ADD_COMMENT_REQUEST,
-  data,
-});
-
-// 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
-const reducer = (state = initialState, action) =>
-  produce(state, (draft) => {
+const post = (state: PostInitailState = initialState, action: ReducerAction) => {
+  return produce(state, (draft: PostInitailState) => {
     switch (action.type) {
       case RETWEET_REQUEST:
         draft.retweetLoading = true;
@@ -116,9 +96,11 @@ const reducer = (state = initialState, action) =>
         draft.retweetLoading = false;
         draft.retweetError = action.error;
         break;
-      case REMOVE_IMAGE:
-        draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
-        break;
+
+      // case REMOVE_IMAGE:
+      //   draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      //   break;
+
       case UPLOAD_IMAGES_REQUEST:
         draft.uploadImagesLoading = true;
         draft.uploadImagesDone = false;
@@ -180,14 +162,12 @@ const reducer = (state = initialState, action) =>
         draft.loadPostLoading = false;
         draft.loadPostError = action.error;
         break;
-      case LOAD_USER_POSTS_REQUEST:
       case LOAD_HASHTAG_POSTS_REQUEST:
       case LOAD_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
         draft.loadPostsError = null;
         break;
-      case LOAD_USER_POSTS_SUCCESS:
       case LOAD_HASHTAG_POSTS_SUCCESS:
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
@@ -195,7 +175,6 @@ const reducer = (state = initialState, action) =>
         draft.mainPosts = draft.mainPosts.concat(action.data);
         draft.hasMorePosts = action.data.length === 10;
         break;
-      case LOAD_USER_POSTS_FAILURE:
       case LOAD_HASHTAG_POSTS_FAILURE:
       case LOAD_POSTS_FAILURE:
         draft.loadPostsLoading = false;
@@ -224,7 +203,7 @@ const reducer = (state = initialState, action) =>
       case UPDATE_POST_SUCCESS:
         draft.updatePostLoading = false;
         draft.updatePostDone = true;
-        draft.mainPosts.find((v) => v.id === action.data.PostId).content = action.data.content;
+        draft.mainPosts.find((v) => v.id === action.data.id).content = action.data.content;
         break;
       case UPDATE_POST_FAILURE:
         draft.updatePostLoading = false;
@@ -238,7 +217,7 @@ const reducer = (state = initialState, action) =>
       case REMOVE_POST_SUCCESS:
         draft.removePostLoading = false;
         draft.removePostDone = true;
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PostId);
+        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
         break;
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
@@ -250,7 +229,7 @@ const reducer = (state = initialState, action) =>
         draft.addCommentError = null;
         break;
       case ADD_COMMENT_SUCCESS: {
-        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        const post = draft.mainPosts.find((v) => v.id === action.data.id);
         post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
@@ -264,5 +243,6 @@ const reducer = (state = initialState, action) =>
         break;
     }
   });
+};
 
-export default reducer;
+export default post;
