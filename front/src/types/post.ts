@@ -1,7 +1,9 @@
 interface PostUser {
   id: number;
   nickname: string;
+  content?: string;
 }
+
 export interface PostImage {
   id: number;
   PostId: number;
@@ -9,10 +11,13 @@ export interface PostImage {
   createdAt: string;
   updatedAt: string;
 }
+
 interface PostRetweet {
   User: PostUser;
   Images: PostImage[];
+  content: string;
 }
+
 interface PostLikser {
   id: number;
 }
@@ -24,7 +29,7 @@ export interface SinglePostData {
   User: PostUser;
   Images: PostImage[];
   Comments: PostUser[];
-  Retweet: PostRetweet[];
+  Retweet: PostRetweet;
   Likers: PostLikser[];
 
   content: string;
@@ -41,7 +46,7 @@ export interface AllPostData {
   User: PostUser;
   Images: PostImage[];
   Comments: PostUser[];
-  Retweet: PostRetweet[];
+  Retweet: PostRetweet;
   Likers: PostLikser[];
 
   content: string;

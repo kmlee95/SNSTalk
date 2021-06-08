@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, message } from 'antd';
 import Link from 'next/link';
-
 import { useDispatch, useSelector } from 'react-redux';
+
 import { logInRequest } from '@reducers/user/login';
 import useInput from '@hooks/useInput';
 import { RootState } from '@reducers/.';
@@ -17,7 +17,7 @@ const SignInForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(
-    (e) => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       dispatch(logInRequest({ email, password }));
     },

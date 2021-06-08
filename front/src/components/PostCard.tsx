@@ -179,11 +179,11 @@ const PostCard = ({ post }: PostCardProps) => {
             renderItem={(item) => (
               <li>
                 <Comment
-                  author={item.User.nickname}
+                  author={item.nickname}
                   avatar={
-                    <Link href={`/user/${item.User.id}`}>
+                    <Link href={`/user/${item.id}`}>
                       <a>
-                        <Avatar>{item.User.nickname[0]}</Avatar>
+                        <Avatar>{item.nickname[0]}</Avatar>
                       </a>
                     </Link>
                   }

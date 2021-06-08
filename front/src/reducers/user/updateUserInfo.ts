@@ -7,7 +7,7 @@ export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE' as const;
 
 export interface ChangeNicknameRequest {
   type: typeof CHANGE_NICKNAME_REQUEST;
-  data: UpdateInfo;
+  data: UpdateInfo | string;
 }
 
 export interface ChangeNicknameSuccess {
@@ -20,7 +20,7 @@ export interface ChangeNicknameFailure {
   error: string;
 }
 
-export const changeNicknameRequest = (data: UpdateInfo): ChangeNicknameRequest => ({
+export const changeNicknameRequest = (data: UpdateInfo | string): ChangeNicknameRequest => ({
   type: CHANGE_NICKNAME_REQUEST,
   data,
 });

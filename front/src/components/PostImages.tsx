@@ -3,10 +3,10 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import ImagesZoom from './ImagesZoom';
 import { backUrl } from '@config/.';
-import { SinglePostData } from '@src/types/post';
+import { PostImage } from '@src/types/post';
 
 interface PostImagesProps {
-  images: SinglePostData[];
+  images: PostImage[];
 }
 
 const PostImages = ({ images }: PostImagesProps) => {

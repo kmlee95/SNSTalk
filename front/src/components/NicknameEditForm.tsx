@@ -8,7 +8,7 @@ import { changeNicknameRequest } from '@reducers/user/updateUserInfo';
 
 const NicknameEditForm = () => {
   const { me } = useSelector((state: RootState) => state.user);
-  const [nickname, onChangeNickname] = useInput(me?.nickname || '');
+  const [nickname, onChangeNickname] = useInput<string>(me?.nickname || '');
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(() => {

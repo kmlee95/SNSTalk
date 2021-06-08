@@ -16,7 +16,7 @@ const CommentForm = ({ post }: CommentProps) => {
   const dispatch = useDispatch();
   const id = useSelector((state: RootState) => state.user.me?.id);
   const { addCommentLoading, addCommentDone } = useSelector((state: RootState) => state.post);
-  const [commentText, onChangeCommentText, setCommentText] = useInput('');
+  const [commentText, onChangeCommentText, setCommentText] = useInput<string>('');
 
   const onSubmitComment = useCallback(() => {
     if (!id) {
