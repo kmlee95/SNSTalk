@@ -8,7 +8,7 @@
 - Redux & Redux saga
 - Ant Design
 - Styled Component
-- Next.js ( SSR + express.js )
+- Next.js ( SSR )
 
 ### Back-end
 
