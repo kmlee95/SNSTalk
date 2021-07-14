@@ -64,9 +64,9 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
-      domain: prod ? '.chalkak.cf' : undefined,
+      domain: prod ? '.snstalk.cf' : undefined,
     },
-    name: 'cksnks',
+    name: 'snstalk',
   }),
 );
 app.use(passport.initialize());
