@@ -9,5 +9,7 @@ module.exports = {
     'consistent-return': 0,
     'array-callback-return': 0,
     'prettier/prettier': 0,
+    'no-console': 0,
+    'no-unused-vars': 0,
   },
 };
