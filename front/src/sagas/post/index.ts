@@ -1,27 +1,29 @@
 import { all, fork } from 'redux-saga/effects';
-import watchAddComment from './addComment';
-import watchAddPost from './addPost';
-import watchLoadPosts from './getAllPosts';
-import watchLoadHashtagPosts from './getHashTag';
-import watchLoadPost from './getOnePost';
+
+import watchGetAllPosts from './getAllPosts';
+import watchWritePost from './writePost';
 import watchLikePost from './likePost';
+import watchUnLikePost from './unLikePost';
+import watchGetComments from './getComments';
+import watchGetUserPosts from './getUserPosts';
+import watchGetPost from './getPost';
+import watchWriteComment from './writeComment';
+import watchGetHashtagPosts from './getHashtagPosts';
+import watchSharePost from './sharePost';
 import watchRemovePost from './removePost';
-import watchRetweet from './retweet';
-import watchUnlikePost from './unlikePost';
-import watchUploadImages from './upLoadImage';
 
 export default function* postSaga() {
   yield all([
-    fork(watchAddComment),
-    fork(watchAddPost),
-    fork(watchLoadPosts),
-
-    fork(watchLoadHashtagPosts),
-    fork(watchLoadPost),
+    fork(watchGetAllPosts),
+    fork(watchWritePost),
     fork(watchLikePost),
+    fork(watchUnLikePost),
+    fork(watchGetComments),
+    fork(watchGetUserPosts),
+    fork(watchGetPost),
+    fork(watchWriteComment),
+    fork(watchGetHashtagPosts),
+    fork(watchSharePost),
     fork(watchRemovePost),
-    fork(watchRetweet),
-    fork(watchUnlikePost),
-    fork(watchUploadImages),
   ]);
 }

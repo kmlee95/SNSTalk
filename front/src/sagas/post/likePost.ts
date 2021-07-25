@@ -1,17 +1,19 @@
 import axios from 'axios';
-import { put, call, takeLatest } from 'redux-saga/effects';
-import { LIKE_POST_REQUEST, LikePostRequest, likePostFailure, likePostSuccess } from '@reducers/post/likePost';
+import { takeLatest, put, call } from 'redux-saga/effects';
 
-function likePostAPI(data: number) {
-  return axios.patch(`/post/${data}/like`);
+import { LikePostRequest, LIKE_POST_REQUEST, likePostSuccess, likePostFailure } from '../../reducers/post/likePost';
+
+function likePostAPI(postId: number) {
+  return axios.post(`/post/${postId}/like`, {}, { withCredentials: true });
 }
 
 function* likePost(action: LikePostRequest) {
   try {
-    const result = yield call(likePostAPI, action.data);
-    yield put(likePostSuccess(result.data));
-  } catch (err) {
-    yield put(likePostFailure(err.response.data));
+    const result = yield call(likePostAPI, action.postId);
+    yield put(likePostSuccess(result.data, action.postIndex));
+  } catch (e) {
+    console.error(e);
+    yield put(likePostFailure(e));
   }
 }
 

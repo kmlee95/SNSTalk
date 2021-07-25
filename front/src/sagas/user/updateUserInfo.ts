@@ -1,29 +1,30 @@
-import { UpdateInfo } from '@src/types/user';
 import axios from 'axios';
 import { takeLatest, put, call } from 'redux-saga/effects';
-import {
-  CHANGE_NICKNAME_REQUEST,
-  ChangeNicknameRequest,
-  changeNicknameSuccess,
-  changeNicknameFailure,
-} from '@reducers/user/updateUserInfo';
 
-function changeNicknameAPI(data: UpdateInfo) {
-  return axios.patch('/user/nickname', { nickname: data });
+import {
+  UpdateInfo,
+  UpdateUserInfoRequest,
+  UPDATE_USER_INFO_REQUEST,
+  updateUserInfoSuccess,
+  updateUserInfoFailure,
+} from '../../reducers/user/updateUserInfo';
+
+function updateUserInfoAPI(data: UpdateInfo) {
+  return axios.patch('/user/info', data, { withCredentials: true });
 }
 
-function* changeNickname(action: ChangeNicknameRequest) {
+function* updateUserInfo(action: UpdateUserInfoRequest) {
   try {
-    const result = yield call(changeNicknameAPI, action.data);
-    yield put(changeNicknameSuccess(result.data));
-  } catch (err) {
-    console.error(err);
-    yield put(changeNicknameFailure(err.response.data));
+    const result = yield call(updateUserInfoAPI, action.data);
+    yield put(updateUserInfoSuccess(result.data));
+  } catch (e) {
+    console.error(e);
+    yield put(updateUserInfoFailure(e));
   }
 }
 
-function* watchChangeNickname() {
-  yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+function* watchUpdateUserInfo() {
+  yield takeLatest(UPDATE_USER_INFO_REQUEST, updateUserInfo);
 }
 
-export default watchChangeNickname;
+export default watchUpdateUserInfo;

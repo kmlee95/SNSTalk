@@ -1,244 +1,185 @@
 import produce from 'immer';
 
-import { PostInitailState } from '@src/types/initState';
-import { AddComment, ADD_COMMENT_SUCCESS, ADD_COMMENT_REQUEST, ADD_COMMENT_FAILURE } from './addComment';
-import { AddPost, ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS } from './addPost';
-import { GetAllPost, LOAD_POSTS_FAILURE, LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS } from './getAllPosts';
+import { GetAllPosts, GET_ALL_POSTS_REQUEST, GET_ALL_POSTS_SUCCESS, GET_ALL_POSTS_FAILURE } from './getAllPosts';
+import { WritePost, WRITE_POST_REQUEST, WRITE_POST_SUCCESS, WRITE_POST_FAILURE } from './writePost';
+import { LikePost, LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE } from './likePost';
+import { UnLikePost, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE } from './unLikePost';
+import { GetComments, GET_COMMENTS_REQUEST, GET_COMMENTS_SUCCESS, GET_COMMENTS_FAILURE } from './getComments';
+import { GetUserPosts, GET_USER_POSTS_REQUEST, GET_USER_POSTS_SUCCESS, GET_USER_POSTS_FAILURE } from './getUserPosts';
+import { GetPost, GET_POST_REQUEST, GET_POST_SUCCESS, GET_POST_FAILURE } from './getPost';
+import { WriteComment, WRITE_COMMENT_REQUEST, WRITE_COMMENT_SUCCESS, WRITE_COMMENT_FAILURE } from './writeComment';
 import {
-  GetHashTag,
-  LOAD_HASHTAG_POSTS_FAILURE,
-  LOAD_HASHTAG_POSTS_REQUEST,
-  LOAD_HASHTAG_POSTS_SUCCESS,
-} from './getHashTag';
-import { GetOnePost, LOAD_POST_FAILURE, LOAD_POST_REQUEST, LOAD_POST_SUCCESS } from './getOnePost';
-import { LikePost, LIKE_POST_FAILURE, LIKE_POST_REQUEST, LIKE_POST_SUCCESS } from './likePost';
-import { RemovePost, REMOVE_POST_FAILURE, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS } from './removePost';
-import { Retweet, RETWEET_FAILURE, RETWEET_REQUEST, RETWEET_SUCCESS } from './retweet';
-import { UnlikePost, UNLIKE_POST_FAILURE, UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS } from './unlikePost';
-import { UploadImage, UPLOAD_IMAGES_FAILURE, UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS } from './upLoadImage';
-import { UpdatePost, UPDATE_POST_FAILURE, UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS } from './updatePost';
+  GetHashtagPosts,
+  GET_HASHTAG_POSTS_REQUEST,
+  GET_HASHTAG_POSTS_SUCCESS,
+  GET_HASHTAG_POSTS_FAILURE,
+} from './getHashtagPosts';
+import { SharePost, SHARE_POST_REQUEST, SHARE_POST_SUCCESS, SHARE_POST_FAILURE } from './sharePost';
+import { RemovePost, REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE } from './removePost';
 
-const initialState: PostInitailState = {
-  mainPosts: [],
-  singlePost: null,
-  imagePaths: [],
-  hasMorePosts: true,
+export interface PostImage {
+  id: number;
+  src: string;
+}
 
-  likePostLoading: false,
-  likePostDone: false,
-  likePostError: null,
+export interface PostUserInfo {
+  id: number;
+  familyName: string;
+  firstName: string;
+  profilePhoto: string | null;
+}
 
-  unlikePostLoading: false,
-  unlikePostDone: false,
-  unlikePostError: null,
+export interface PostLiker {
+  id: number;
+}
 
-  loadPostLoading: false,
-  loadPostDone: false,
-  loadPostError: null,
+export interface CommentInfo {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  PostId: number;
+  User: PostUserInfo;
+}
 
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
+export interface SharePostInfo {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  User: PostUserInfo;
+  Images: PostImage[];
+}
 
-  addPostLoading: false,
-  addPostDone: false,
-  addPostError: null,
+export interface PostInfo {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  User: PostUserInfo;
+  Images: PostImage[];
+  Likers: PostLiker[];
+  SharePostId: number | null;
+  SharePost?: SharePostInfo;
+  comments?: CommentInfo[];
+}
 
-  updatePostLoading: false,
-  updatePostDone: false,
-  updatePostError: null,
+export interface PostInitialState {
+  posts: PostInfo[];
+  post: PostInfo | null;
+  hasMorePost: boolean;
+}
 
-  removePostLoading: false,
-  removePostDone: false,
-  removePostError: null,
-
-  addCommentLoading: false,
-  addCommentDone: false,
-  addCommentError: null,
-
-  uploadImagesLoading: false,
-  uploadImagesDone: false,
-  uploadImagesError: null,
-
-  retweetLoading: false,
-  retweetDone: false,
-  retweetError: null,
+const initialState: PostInitialState = {
+  posts: [],
+  post: null,
+  hasMorePost: false,
 };
 
 type ReducerAction =
-  | AddComment
-  | AddPost
-  | GetAllPost
-  | GetHashTag
-  | GetOnePost
+  | GetAllPosts
+  | WritePost
   | LikePost
-  | RemovePost
-  | Retweet
-  | UnlikePost
-  | UploadImage
-  | UpdatePost;
+  | UnLikePost
+  | GetComments
+  | GetUserPosts
+  | GetPost
+  | WriteComment
+  | GetHashtagPosts
+  | SharePost
+  | RemovePost;
 
-const post = (state: PostInitailState = initialState, action: ReducerAction) => {
-  return produce(state, (draft: PostInitailState) => {
+const post = (state: PostInitialState = initialState, action: ReducerAction) => {
+  return produce(state, (draft: PostInitialState) => {
     switch (action.type) {
-      case RETWEET_REQUEST:
-        draft.retweetLoading = true;
-        draft.retweetDone = false;
-        draft.retweetError = null;
+      // get all posts
+      case GET_ALL_POSTS_REQUEST:
+      case GET_USER_POSTS_REQUEST:
+      case GET_HASHTAG_POSTS_REQUEST:
+        draft.posts = action.lastUpdatedAt === '' ? [] : draft.posts;
+        draft.hasMorePost = action.lastUpdatedAt !== '' ? draft.hasMorePost : true;
         break;
-      case RETWEET_SUCCESS: {
-        draft.retweetLoading = false;
-        draft.retweetDone = true;
-        draft.mainPosts.unshift(action.data);
+      case GET_ALL_POSTS_SUCCESS:
+      case GET_USER_POSTS_SUCCESS:
+      case GET_HASHTAG_POSTS_SUCCESS:
+        action.data.forEach((v) => draft.posts.push(v));
+        draft.hasMorePost = action.data.length === 10;
         break;
-      }
-      case RETWEET_FAILURE:
-        draft.retweetLoading = false;
-        draft.retweetError = action.error;
+      case GET_ALL_POSTS_FAILURE:
+      case GET_USER_POSTS_FAILURE:
+      case GET_HASHTAG_POSTS_FAILURE:
         break;
 
-      // case REMOVE_IMAGE:
-      //   draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
-      //   break;
+      // write post
+      case WRITE_POST_REQUEST:
+      case WRITE_POST_FAILURE:
+        break;
+      case WRITE_POST_SUCCESS:
+        draft.posts.unshift(action.data);
+        break;
 
-      case UPLOAD_IMAGES_REQUEST:
-        draft.uploadImagesLoading = true;
-        draft.uploadImagesDone = false;
-        draft.uploadImagesError = null;
-        break;
-      case UPLOAD_IMAGES_SUCCESS: {
-        draft.imagePaths = draft.imagePaths.concat(action.data);
-        draft.uploadImagesLoading = false;
-        draft.uploadImagesDone = true;
-        break;
-      }
-      case UPLOAD_IMAGES_FAILURE:
-        draft.uploadImagesLoading = false;
-        draft.uploadImagesError = action.error;
-        break;
+      // like post
       case LIKE_POST_REQUEST:
-        draft.likePostLoading = true;
-        draft.likePostDone = false;
-        draft.likePostError = null;
+      case LIKE_POST_FAILURE:
         break;
       case LIKE_POST_SUCCESS: {
-        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-        post.Likers.push({ id: action.data.UserId });
-        draft.likePostLoading = false;
-        draft.likePostDone = true;
+        draft.posts[action.postIndex].Likers.push(action.data);
         break;
       }
-      case LIKE_POST_FAILURE:
-        draft.likePostLoading = false;
-        draft.likePostError = action.error;
-        break;
+
+      // unlike post
       case UNLIKE_POST_REQUEST:
-        draft.unlikePostLoading = true;
-        draft.unlikePostDone = false;
-        draft.unlikePostError = null;
+      case UNLIKE_POST_FAILURE:
         break;
       case UNLIKE_POST_SUCCESS: {
-        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-        post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
-        draft.unlikePostLoading = false;
-        draft.unlikePostDone = true;
+        const index = draft.posts[action.postIndex].Likers.findIndex((v) => v.id === action.data.id);
+        draft.posts[action.postIndex].Likers.splice(index, 1);
         break;
       }
-      case UNLIKE_POST_FAILURE:
-        draft.unlikePostLoading = false;
-        draft.unlikePostError = action.error;
+
+      // get comments
+      case GET_COMMENTS_REQUEST:
+      case GET_COMMENTS_FAILURE:
         break;
-      case LOAD_POST_REQUEST:
-        draft.loadPostLoading = true;
-        draft.loadPostDone = false;
-        draft.loadPostError = null;
+      case GET_COMMENTS_SUCCESS: {
+        draft.posts[action.postIndex].comments = action.data;
         break;
-      case LOAD_POST_SUCCESS:
-        draft.loadPostLoading = false;
-        draft.loadPostDone = true;
-        draft.singlePost = action.data;
+      }
+
+      // get post
+      case GET_POST_REQUEST:
+      case GET_POST_FAILURE:
         break;
-      case LOAD_POST_FAILURE:
-        draft.loadPostLoading = false;
-        draft.loadPostError = action.error;
+      case GET_POST_SUCCESS: {
+        draft.post = action.data;
         break;
-      case LOAD_HASHTAG_POSTS_REQUEST:
-      case LOAD_POSTS_REQUEST:
-        draft.loadPostsLoading = true;
-        draft.loadPostsDone = false;
-        draft.loadPostsError = null;
+      }
+
+      // write comment
+      case WRITE_COMMENT_REQUEST:
+      case WRITE_COMMENT_FAILURE:
         break;
-      case LOAD_HASHTAG_POSTS_SUCCESS:
-      case LOAD_POSTS_SUCCESS:
-        draft.loadPostsLoading = false;
-        draft.loadPostsDone = true;
-        draft.mainPosts = draft.mainPosts.concat(action.data);
-        draft.hasMorePosts = action.data.length === 10;
+      case WRITE_COMMENT_SUCCESS: {
+        draft.posts[action.postIndex].comments.push(action.data);
         break;
-      case LOAD_HASHTAG_POSTS_FAILURE:
-      case LOAD_POSTS_FAILURE:
-        draft.loadPostsLoading = false;
-        draft.loadPostsError = action.error;
+      }
+
+      // share post
+      case SHARE_POST_REQUEST:
+      case SHARE_POST_FAILURE:
         break;
-      case ADD_POST_REQUEST:
-        draft.addPostLoading = true;
-        draft.addPostDone = false;
-        draft.addPostError = null;
+      case SHARE_POST_SUCCESS:
+        draft.posts.unshift(action.data);
         break;
-      case ADD_POST_SUCCESS:
-        draft.addPostLoading = false;
-        draft.addPostDone = true;
-        draft.mainPosts.unshift(action.data);
-        draft.imagePaths = [];
-        break;
-      case ADD_POST_FAILURE:
-        draft.addPostLoading = false;
-        draft.addPostError = action.error;
-        break;
-      case UPDATE_POST_REQUEST:
-        draft.updatePostLoading = true;
-        draft.updatePostDone = false;
-        draft.updatePostError = null;
-        break;
-      case UPDATE_POST_SUCCESS:
-        draft.updatePostLoading = false;
-        draft.updatePostDone = true;
-        draft.mainPosts.find((v) => v.id === action.data.id).content = action.data.content;
-        break;
-      case UPDATE_POST_FAILURE:
-        draft.updatePostLoading = false;
-        draft.updatePostError = action.error;
-        break;
+
+      // remove post
       case REMOVE_POST_REQUEST:
-        draft.removePostLoading = true;
-        draft.removePostDone = false;
-        draft.removePostError = null;
+      case REMOVE_POST_FAILURE:
         break;
       case REMOVE_POST_SUCCESS:
-        draft.removePostLoading = false;
-        draft.removePostDone = true;
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
+        draft.posts.splice(action.postIndex, 1);
         break;
-      case REMOVE_POST_FAILURE:
-        draft.removePostLoading = false;
-        draft.removePostError = action.error;
-        break;
-      case ADD_COMMENT_REQUEST:
-        draft.addCommentLoading = true;
-        draft.addCommentDone = false;
-        draft.addCommentError = null;
-        break;
-      case ADD_COMMENT_SUCCESS: {
-        const post = draft.mainPosts.find((v) => v.id === action.data.id);
-        post.Comments.unshift(action.data);
-        draft.addCommentLoading = false;
-        draft.addCommentDone = true;
-        break;
-      }
-      case ADD_COMMENT_FAILURE:
-        draft.addCommentLoading = false;
-        draft.addCommentError = action.error;
-        break;
+
       default:
         break;
     }

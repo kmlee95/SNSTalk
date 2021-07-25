@@ -7,6 +7,7 @@ export const FormWrapper = styled.form`
   flex-direction: column;
   background-color: ${(props) => props.theme.WHITE_COLOR};
   padding: 10px;
+
   & > .post-form-button {
     margin: 6px 0 12px;
     display: flex;
@@ -19,7 +20,7 @@ export const UploadWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-export const UploadButton = styled.span`
+export const UploadButtonWrapper = styled.span`
   width: 100px;
   height: 100px;
   text-align: center;
@@ -30,12 +31,13 @@ export const UploadButton = styled.span`
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.5s;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.15);
   }
 `;
 
-export const Preview = styled.span<{ imgSrc: string }>`
+export const PreviewWrapper = styled.span<{ imgSrc: string }>`
   width: 100px;
   height: 100px;
   background-image: url('${(props) => props.imgSrc}');
@@ -43,13 +45,15 @@ export const Preview = styled.span<{ imgSrc: string }>`
   margin-right: 16px;
   margin-bottom: 16px;
   text-align: right;
+
   & > span {
     width: 20px;
     height: 20px;
   }
+
   &:hover {
     & > span {
-      cursor: pointer;
-    }
+    cursor: pointer;
+  }
   }
 `;

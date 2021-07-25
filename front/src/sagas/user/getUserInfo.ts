@@ -1,22 +1,24 @@
 import axios from 'axios';
 import { takeLatest, put, call } from 'redux-saga/effects';
-import { LOAD_MY_INFO_REQUEST, loadMyInfoSuccess, loadMyInfoFailure } from '@reducers/user/getUserInfo';
 
-function loadMyInfoAPI() {
-  return axios.get('/user');
+import { GET_USER_INFO_REQUEST, getUserInfoSuccess, getUserInfoFailure } from '../../reducers/user/getUserInfo';
+
+function getUserInfoAPI() {
+  return axios.get('/user', { withCredentials: true });
 }
 
-function* loadMyInfo() {
+function* getUserInfo() {
   try {
-    const result = yield call(loadMyInfoAPI);
-    yield put(loadMyInfoSuccess(result.data));
-  } catch (err) {
-    yield put(loadMyInfoFailure(err.response.data));
+    const result = yield call(getUserInfoAPI);
+    yield put(getUserInfoSuccess(result.data));
+  } catch (e) {
+    console.error(e);
+    yield put(getUserInfoFailure(e));
   }
 }
 
-function* watchLoadMyInfo() {
-  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+function* watchGetUserInfo() {
+  yield takeLatest(GET_USER_INFO_REQUEST, getUserInfo);
 }
 
-export default watchLoadMyInfo;
+export default watchGetUserInfo;

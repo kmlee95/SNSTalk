@@ -1,22 +1,24 @@
 import axios from 'axios';
 import { takeLatest, put, call } from 'redux-saga/effects';
-import { LOG_OUT_REQUEST, logOutSuccess, logOutFailure } from '@reducers/user/logout';
+
+import { LOGOUT_REQUEST, logOutSuccess, logOutFailure } from '../../reducers/user/logout';
 
 function logOutAPI() {
-  return axios.post('/user/logout');
+  return axios.post('/user/logout', {}, { withCredentials: true });
 }
 
 function* logOut() {
   try {
     yield call(logOutAPI);
     yield put(logOutSuccess());
-  } catch (err) {
-    yield put(logOutFailure(err.response.data));
+  } catch (e) {
+    console.error(e);
+    yield put(logOutFailure(e));
   }
 }
 
-function* watchLogOut() {
-  yield takeLatest(LOG_OUT_REQUEST, logOut);
+function* watchLogout() {
+  yield takeLatest(LOGOUT_REQUEST, logOut);
 }
 
-export default watchLogOut;
+export default watchLogout;

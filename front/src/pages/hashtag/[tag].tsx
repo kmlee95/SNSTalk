@@ -1,42 +1,50 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import React, { useRef, useEffect, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 import { END } from 'redux-saga';
 
-import axios from 'axios';
-
-import PostCard from '@components/PostCard';
 import wrapper from '@store/configureStore';
-import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
-import { getHashTagRequest } from '@reducers/post/getHashTag';
+import PostCard from '@components/PostCard';
 import { RootState } from '@reducers/.';
+import { getHashtagPostsRequest } from '@reducers/post/getHashtagPosts';
 
-const Hashtag = () => {
+interface Props {
+  tag: string;
+}
+
+const Hashtag = ({ tag }: Props) => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { tag } = router.query;
-  const { mainPosts, hasMorePosts } = useSelector((state: RootState) => state.post);
+  const { posts } = useSelector((state: RootState) => state.post);
+  const { hasMorePost } = useSelector((state: RootState) => state.post);
+  const countRef = useRef<string[]>([]);
+
+  const onScroll = useCallback(() => {
+    if (
+      posts.length !== 0 &&
+      hasMorePost &&
+      window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300
+    ) {
+      const lastUpdatedAt = posts[posts.length - 1].updatedAt;
+      if (!countRef.current.includes(lastUpdatedAt)) {
+        dispatch(getHashtagPostsRequest(tag, lastUpdatedAt));
+        countRef.current.push(lastUpdatedAt);
+      }
+    }
+  }, [countRef.current, hasMorePost, posts]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts) {
-          dispatch(
-            getHashTagRequest(String(tag), mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id),
-          );
-        }
-      }
-    };
     window.addEventListener('scroll', onScroll);
+
     return () => {
+      countRef.current = [];
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts.length, hasMorePosts, tag]);
+  }, [hasMorePost, posts.length]);
 
   return (
     <>
-      {mainPosts.map((c) => (
-        <PostCard key={c.id} post={c} />
+      {posts.map((v, i) => (
+        <PostCard key={`post_${v.id}`} postIndex={i} postData={v} />
       ))}
     </>
   );
@@ -48,11 +56,16 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch(loadMyInfoRequest());
-  context.store.dispatch(getHashTagRequest(String(context.params.tag)));
+
+  //context.params.id
+  if (context.query.tag && typeof context.query.tag === 'string') {
+    const { tag } = context.query;
+    context.store.dispatch(getHashtagPostsRequest(tag));
+    return { tag };
+  }
+
   context.store.dispatch(END);
   await (context.store as any).sagaTask.toPromise();
-  return { props: {} };
 });
 
 export default Hashtag;

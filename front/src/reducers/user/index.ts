@@ -1,229 +1,232 @@
 import produce from 'immer';
 
-import { UserInitialState } from '@src/types/initState';
-import { SignUp, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from './signup';
-import { Login, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE } from './login';
-import { Follow, FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE } from './follow';
-import { GetOtherInfo, LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE } from './getOtherInfo';
-import { GetUserInfo, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE } from './getUserInfo';
-import { Logout, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE } from './logout';
-import {
-  RemoveFollow,
-  REMOVE_FOLLOWER_SUCCESS,
-  REMOVE_FOLLOWER_REQUEST,
-  REMOVE_FOLLOWER_FAILURE,
-} from './removeFollow';
-import { UnFollow, UNFOLLOW_SUCCESS, UNFOLLOW_REQUEST, UNFOLLOW_FAILURE } from './unfollow';
+import { notifyType, loadingType, LOADING_SIGNUP_SUBMIT, LOADING_SIGNIN_SUBMIT, LOADING_LOGOUT } from './values';
+import { SignUp, SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE } from './signup';
+import { SignIn, SIGNIN_REQUEST, SIGNIN_SUCCESS, SIGNIN_FAILURE } from './signin';
+import { LogOut, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from './logout';
+import { GetUserInfo, GET_USER_INFO_REQUEST, GET_USER_INFO_SUCCESS, GET_USER_INFO_FAILURE } from './getUserInfo';
+import { GetFriends, GET_FRIENDS_REQUEST, GET_FRIENDS_SUCCESS, GET_FRIENDS_FAILURE } from './getFriends';
+import { DeleteFriend, DELETE_FRIEND_REQUEST, DELETE_FRIEND_SUCCESS, DELETE_FRIEND_FAILURE } from './deleteFriend';
 import {
   UpdateUserInfo,
-  CHANGE_NICKNAME_REQUEST,
-  CHANGE_NICKNAME_SUCCESS,
-  CHANGE_NICKNAME_FAILURE,
+  UPDATE_USER_INFO_REQUEST,
+  UPDATE_USER_INFO_SUCCESS,
+  UPDATE_USER_INFO_FAILURE,
 } from './updateUserInfo';
+import {
+  GetOtherUserInfo,
+  GET_OTHER_USER_INFO_REQUEST,
+  GET_OTHER_USER_INFO_SUCCESS,
+  GET_OTHER_USER_INFO_FAILURE,
+} from './getOtherUserInfo';
+import { FriendRequest, FRIEND_REQUEST_REQUEST, FRIEND_REQUEST_SUCCESS, FRIEND_REQUEST_FAILURE } from './friendRequest';
+import { GetNotify, GET_NOTIFY_REQUEST, GET_NOTIFY_SUCCESS, GET_NOTIFY_FAILURE } from './getNotify';
+import {
+  FriendResponse,
+  FRIEND_RESPONSE_REQUEST,
+  FRIEND_RESPONSE_SUCCESS,
+  FRIEND_RESPONSE_FAILURE,
+} from './friendResponse';
+
+export interface UserInfo {
+  id: number;
+  familyName: string;
+  firstName: string;
+  userId: string;
+  birth: string;
+  gender: string;
+  phone: string;
+  mail: string;
+  profilePhoto: string | null;
+  friends: number;
+}
+
+export interface UserNotify {
+  id: number;
+  notifyType: notifyType;
+  requestorId: number;
+  requestor: {
+    familyName: string;
+    firstName: string;
+  };
+}
+
+export interface UserFriends {
+  id: number;
+  familyName: string;
+  firstName: string;
+  profilePhoto: string;
+  Friend: {
+    createdAt: string;
+    updatedAt: string;
+    UserId: number;
+    FriendId: number;
+  };
+}
+
+export interface OtherUserInfo {
+  id: number;
+  familyName: string;
+  firstName: string;
+  profilePhoto: string | null;
+  Posts: number;
+  Friends: number;
+}
+
+export interface UserInitialState {
+  info: UserInfo | null;
+  notify: UserNotify[] | null;
+  Friends: UserFriends[] | null;
+  otherUserInfo: OtherUserInfo | null;
+  isLoading: {
+    id: number | null;
+    name: loadingType | null;
+  };
+}
 
 const initialState: UserInitialState = {
-  userInfo: null,
-  me: null,
-
-  loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
-  loadMyInfoDone: false,
-  loadMyInfoError: null,
-
-  loadUserLoading: false, // 유저 정보 가져오기 시도중
-  loadUserDone: false,
-  loadUserError: null,
-
-  followLoading: false, // 팔로우 시도중
-  followDone: false,
-  followError: null,
-
-  unfollowLoading: false, // 언팔로우 시도중
-  unfollowDone: false,
-  unfollowError: null,
-
-  logInLoading: false, // 로그인 시도중
-  logInDone: false,
-  logInError: null,
-
-  logOutLoading: false, // 로그아웃 시도중
-  logOutDone: false,
-  logOutError: null,
-
-  signUpLoading: false, // 회원가입 시도중
-  signUpDone: false,
-  signUpError: null,
-
-  changeNicknameLoading: false, // 닉네임 변경 시도중
-  changeNicknameDone: false,
-  changeNicknameError: null,
-
-  loadFollowingsLoading: false,
-  loadFollowingsDone: false,
-  loadFollowingsError: null,
-
-  loadFollowersLoading: false,
-  loadFollowersDone: false,
-  loadFollowersError: null,
-
-  removeFollowerLoading: false,
-  removeFollowerDone: false,
-  removeFollowerError: null,
+  info: null,
+  notify: null,
+  Friends: null,
+  otherUserInfo: null,
+  isLoading: {
+    id: null,
+    name: null,
+  },
 };
 
 type ReducerAction =
   | SignUp
-  | Login
-  | Follow
-  | GetOtherInfo
+  | SignIn
+  | LogOut
   | GetUserInfo
-  | Logout
-  | RemoveFollow
-  | UnFollow
-  | UpdateUserInfo;
+  | GetFriends
+  | DeleteFriend
+  | UpdateUserInfo
+  | GetOtherUserInfo
+  | FriendRequest
+  | GetNotify
+  | FriendResponse;
 
 const user = (state: UserInitialState = initialState, action: ReducerAction) => {
   return produce(state, (draft: UserInitialState) => {
     switch (action.type) {
-      case SIGN_UP_REQUEST:
-        draft.signUpLoading = true;
-        draft.signUpError = null;
-        draft.signUpDone = false;
+      // sign up
+      case SIGNUP_REQUEST:
+        draft.isLoading.name = LOADING_SIGNUP_SUBMIT;
         break;
-      case SIGN_UP_SUCCESS:
-        draft.signUpLoading = false;
-        draft.signUpDone = true;
-        break;
-      case SIGN_UP_FAILURE:
-        draft.signUpLoading = false;
-        draft.signUpError = action.error;
-        break;
-      /* 로그인 */
-      case LOG_IN_REQUEST:
-        draft.logInLoading = true;
-        draft.logInError = null;
-        draft.logInDone = false;
-        break;
-      case LOG_IN_SUCCESS:
-        draft.logInLoading = false;
-        draft.me = action.data;
-        draft.logInDone = true;
-        break;
-      case LOG_IN_FAILURE:
-        draft.logInLoading = false;
-        draft.logInError = action.error;
+      case SIGNUP_SUCCESS:
+      case SIGNUP_FAILURE:
+        draft.isLoading.id = null;
+        draft.isLoading.name = null;
         break;
 
-      /* 로그아웃 */
-      case LOG_OUT_REQUEST:
-        draft.logOutLoading = true;
-        draft.logOutError = null;
-        draft.logOutDone = false;
+      // sign in
+      case SIGNIN_REQUEST:
+        draft.isLoading.name = LOADING_SIGNIN_SUBMIT;
         break;
-      case LOG_OUT_SUCCESS:
-        draft.logOutLoading = false;
-        draft.logOutDone = true;
-        draft.me = null;
+      case SIGNIN_SUCCESS:
+        draft.isLoading.id = null;
+        draft.isLoading.name = null;
+        draft.info = action.data;
         break;
-      case LOG_OUT_FAILURE:
-        draft.logOutLoading = false;
-        draft.logOutError = action.error;
+      case SIGNIN_FAILURE:
+        draft.isLoading.id = null;
+        draft.isLoading.name = null;
         break;
 
-      /* 정보 수정 - 이름 */
-      case CHANGE_NICKNAME_REQUEST:
-        draft.changeNicknameLoading = true;
-        draft.changeNicknameError = null;
-        draft.changeNicknameDone = false;
+      // logout
+      case LOGOUT_REQUEST:
+        draft.isLoading.name = LOADING_LOGOUT;
         break;
-      case CHANGE_NICKNAME_SUCCESS:
-        draft.me.nickname = action.data.nickname;
-        draft.changeNicknameLoading = false;
-        draft.changeNicknameDone = true;
+      case LOGOUT_SUCCESS:
+        draft.isLoading.id = null;
+        draft.isLoading.name = null;
+        draft.info = null;
+        draft.Friends = null;
+        draft.notify = null;
         break;
-      case CHANGE_NICKNAME_FAILURE:
-        draft.changeNicknameLoading = false;
-        draft.changeNicknameError = action.error;
-        break;
-
-      /* 현재 내 정보 */
-      case LOAD_MY_INFO_REQUEST:
-        draft.loadMyInfoLoading = true;
-        draft.loadMyInfoError = null;
-        draft.loadMyInfoDone = false;
-        break;
-      case LOAD_MY_INFO_SUCCESS:
-        draft.loadMyInfoLoading = false;
-        draft.me = action.data;
-        draft.loadMyInfoDone = true;
-        break;
-      case LOAD_MY_INFO_FAILURE:
-        draft.loadMyInfoLoading = false;
-        draft.loadMyInfoError = action.error;
+      case LOGOUT_FAILURE:
+        draft.isLoading.id = null;
+        draft.isLoading.name = null;
         break;
 
-      /* 특정 유저 정보 */
-      case LOAD_USER_REQUEST:
-        draft.loadUserLoading = true;
-        draft.loadUserError = null;
-        draft.loadUserDone = false;
+      // get user info
+      case GET_USER_INFO_REQUEST:
+      case GET_USER_INFO_FAILURE:
         break;
-      case LOAD_USER_SUCCESS:
-        draft.loadUserLoading = false;
-        draft.userInfo = action.data;
-        draft.loadUserDone = true;
-        break;
-      case LOAD_USER_FAILURE:
-        draft.loadUserLoading = false;
-        draft.loadUserError = action.error;
+      case GET_USER_INFO_SUCCESS:
+        draft.info = action.data;
         break;
 
-      /* follow */
-      case FOLLOW_REQUEST:
-        draft.followLoading = true;
-        draft.followError = null;
-        draft.followDone = false;
+      // get friends
+      case GET_FRIENDS_REQUEST:
+        if (action.lastId === 0) {
+          draft.Friends = null;
+        }
         break;
-      case FOLLOW_SUCCESS:
-        draft.followLoading = false;
-        draft.me.Followings.push({ id: action.data.UserId });
-        draft.followDone = true;
+      case GET_FRIENDS_SUCCESS:
+        if (draft.Friends === null) {
+          draft.Friends = [];
+        }
+        draft.Friends.push(...action.data);
         break;
-      case FOLLOW_FAILURE:
-        draft.followLoading = false;
-        draft.followError = action.error;
-        break;
-
-      /* unfollow */
-      case UNFOLLOW_REQUEST:
-        draft.unfollowLoading = true;
-        draft.unfollowError = null;
-        draft.unfollowDone = false;
-        break;
-      case UNFOLLOW_SUCCESS:
-        draft.unfollowLoading = false;
-        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
-        draft.unfollowDone = true;
-        break;
-      case UNFOLLOW_FAILURE:
-        draft.unfollowLoading = false;
-        draft.unfollowError = action.error;
+      case GET_FRIENDS_FAILURE:
         break;
 
-      /* remove follow */
-      case REMOVE_FOLLOWER_REQUEST:
-        draft.removeFollowerLoading = true;
-        draft.removeFollowerError = null;
-        draft.removeFollowerDone = false;
+      // delete friend
+      case DELETE_FRIEND_REQUEST:
+      case DELETE_FRIEND_FAILURE:
         break;
-      case REMOVE_FOLLOWER_SUCCESS:
-        draft.removeFollowerLoading = false;
-        draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
-        draft.removeFollowerDone = true;
+      case DELETE_FRIEND_SUCCESS: {
+        const index = draft.Friends.findIndex((v) => v.Friend.FriendId === action.deleteId);
+        draft.Friends.splice(index, 1);
+        draft.info.friends--;
         break;
-      case REMOVE_FOLLOWER_FAILURE:
-        draft.removeFollowerLoading = false;
-        draft.removeFollowerError = action.error;
+      }
+
+      // update user info
+      case UPDATE_USER_INFO_REQUEST:
+      case UPDATE_USER_INFO_FAILURE:
         break;
+      case UPDATE_USER_INFO_SUCCESS:
+        draft.info = Object.assign(draft.info, action.data);
+        break;
+
+      // get other user info
+      case GET_OTHER_USER_INFO_REQUEST:
+      case GET_OTHER_USER_INFO_FAILURE:
+        break;
+      case GET_OTHER_USER_INFO_SUCCESS:
+        draft.otherUserInfo = action.data;
+        break;
+
+      // friend request
+      case FRIEND_REQUEST_REQUEST:
+      case FRIEND_REQUEST_FAILURE:
+      case FRIEND_REQUEST_SUCCESS:
+        break;
+
+      // get notify
+      case GET_NOTIFY_REQUEST:
+      case GET_NOTIFY_FAILURE:
+        break;
+      case GET_NOTIFY_SUCCESS:
+        draft.notify = action.data;
+        break;
+
+      // accept friend
+      case FRIEND_RESPONSE_REQUEST:
+      case FRIEND_RESPONSE_FAILURE:
+        break;
+      case FRIEND_RESPONSE_SUCCESS: {
+        const index = draft.notify.findIndex((v) => v.id === action.data.notifyId);
+        draft.notify.splice(index, 1);
+        if (action.response) {
+          draft.info.friends++;
+        }
+        break;
+      }
 
       default:
         break;

@@ -1,22 +1,33 @@
 import axios from 'axios';
-import { put, call, throttle } from 'redux-saga/effects';
-import { LOAD_POSTS_REQUEST, LoadPostsRequest, loadPostsSuccess, loadPostsFailure } from '@reducers/post/getAllPosts';
+import { takeLatest, put, call } from 'redux-saga/effects';
 
-function loadPostsAPI(lastId: number) {
-  return axios.get(`/posts?lastId=${lastId || 0}`);
+import {
+  GetAllPostsRequest,
+  GET_ALL_POSTS_REQUEST,
+  getAllPostsSuccess,
+  getAllPostsFailure,
+} from '../../reducers/post/getAllPosts';
+
+function getAllPostsAPI(lastUpdatedAt: string) {
+  const limit = 10;
+  if (lastUpdatedAt === '') {
+    return axios.get(`/posts?limit=${limit}`);
+  }
+  return axios.get(`/posts?limit=${limit}&lastUpdatedAt=${lastUpdatedAt}`);
 }
 
-function* loadPosts(action: LoadPostsRequest) {
+function* getAllPosts(action: GetAllPostsRequest) {
   try {
-    const result = yield call(loadPostsAPI, action.data);
-    yield put(loadPostsSuccess(result.data));
-  } catch (err) {
-    yield put(loadPostsFailure(err.response.data));
+    const result = yield call(getAllPostsAPI, action.lastUpdatedAt);
+    yield put(getAllPostsSuccess(result.data));
+  } catch (e) {
+    console.error(e);
+    yield put(getAllPostsFailure(e));
   }
 }
 
-function* watchLoadPosts() {
-  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+function* watchGetAllPosts() {
+  yield takeLatest(GET_ALL_POSTS_REQUEST, getAllPosts);
 }
 
-export default watchLoadPosts;
+export default watchGetAllPosts;

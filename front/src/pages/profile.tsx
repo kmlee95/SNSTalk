@@ -1,77 +1,57 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Head from 'next/head';
-import { useSelector } from 'react-redux';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
-import { END } from 'redux-saga';
 import axios from 'axios';
-import useSWR from 'swr';
+import { END } from 'redux-saga';
 
-import NicknameEditForm from '@components/NicknameEditForm';
-import FollowList from '@components/FollowList';
-import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
-import wrapper from '@store/configureStore';
-import { backUrl } from '@config/.';
-import { RootState } from '@reducers/.';
-
-const fetcher = (url: any) => axios.get(url, { withCredentials: true }).then((result) => result.data);
+import ProfileForm from '@components/ProfileForm';
+import PostCard from '@components/PostCard';
+import { RootState } from '../reducers';
+import { getUserPostsRequest } from '../reducers/post/getUserPosts';
+import wrapper from '@src/store/configureStore';
 
 const Profile = () => {
-  const [followingsLimit, setFollowingsLimit] = useState<number>(3);
-  const [followersLimit, setFollowersLimit] = useState<number>(3);
+  const dispatch = useDispatch();
+  const id = useSelector((state: RootState) => state.user.info && state.user.info.id);
+  const { posts } = useSelector((state: RootState) => state.post);
+  const { hasMorePost } = useSelector((state: RootState) => state.post);
+  const countRef = useRef<string[]>([]);
 
-  const { data: followingsData, error: followingError } = useSWR(
-    `${backUrl}/user/followings?limit=${followingsLimit}`,
-    fetcher,
-  );
-  const { data: followersData, error: followerError } = useSWR(
-    `${backUrl}/user/followers?limit=${followersLimit}`,
-    fetcher,
-  );
-
-  const { me } = useSelector((state: RootState) => state.user);
+  const onScroll = useCallback(() => {
+    if (
+      posts.length !== 0 &&
+      hasMorePost &&
+      window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300
+    ) {
+      const lastUpdatedAt = posts[posts.length - 1].updatedAt;
+      if (!countRef.current.includes(lastUpdatedAt)) {
+        dispatch(getUserPostsRequest(id, lastUpdatedAt));
+        countRef.current.push(lastUpdatedAt);
+      }
+    }
+  }, [countRef.current, hasMorePost, posts]);
 
   useEffect(() => {
-    if (!(me && me.id)) {
+    if (!id) {
       Router.push('/');
     }
-  }, [me && me.id]);
+  }, [id]);
 
-  const loadMoreFollowers = useCallback(() => {
-    setFollowersLimit((prev) => prev + 3);
-  }, []);
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll);
 
-  const loadMoreFollowings = useCallback(() => {
-    setFollowingsLimit((prev) => prev + 3);
-  }, []);
-
-  if (!me) {
-    return '내 정보 로딩중...';
-  }
-
-  if (followerError || followingError) {
-    console.error(followerError || followingError);
-    return '팔로잉/팔로워 로딩 중 에러가 발생했습니다.';
-  }
+    return () => {
+      countRef.current = [];
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [hasMorePost, posts.length]);
 
   return (
     <>
-      <Head>
-        <title>내 프로필 | SnsTalk</title>
-      </Head>
-
-      <NicknameEditForm />
-      <FollowList
-        header="팔로잉"
-        data={followingsData}
-        onClickMore={loadMoreFollowings}
-        loading={!followingError && !followingsData}
-      />
-      <FollowList
-        header="팔로워"
-        data={followersData}
-        onClickMore={loadMoreFollowers}
-        loading={!followerError && !followersData}
-      />
+      <ProfileForm />
+      {posts.map((v) => (
+        <PostCard key={`post_${v.id}`} postData={v} />
+      ))}
     </>
   );
 };
@@ -82,7 +62,11 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch(loadMyInfoRequest());
+
+  const id = context.store.getState().user.info && context.store.getState().user.info.id;
+  if (id) {
+    context.store.dispatch(getUserPostsRequest(id));
+  }
 
   context.store.dispatch(END);
   await (context.store as any).sagaTask.toPromise();

@@ -1,38 +1,44 @@
-import { SignUpData } from '@src/types/user';
+export const SIGNUP_REQUEST = 'SIGNUP_REQUEST' as const;
+export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS' as const;
+export const SIGNUP_FAILURE = 'SIGNUP_FAILURE' as const;
 
-export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST' as const;
-export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS' as const;
-export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE' as const;
+export interface SignUpData {
+  userId: string;
+  password: string;
+  familyName: string;
+  firstName: string;
+  birth: string;
+  gender: string;
+  phone: string;
+  mail: string;
+}
 
 export interface SignUpRequest {
-  type: typeof SIGN_UP_REQUEST;
+  type: typeof SIGNUP_REQUEST;
   data: SignUpData;
 }
 
 export interface SignUpSuccess {
-  type: typeof SIGN_UP_SUCCESS;
+  type: typeof SIGNUP_SUCCESS;
 }
 
 export interface SignUpFailure {
-  type: typeof SIGN_UP_FAILURE;
+  type: typeof SIGNUP_FAILURE;
   error: string;
 }
 
-export const signUpRequest = (data: SignUpData): SignUpRequest => ({
-  type: SIGN_UP_REQUEST,
+export const signUpRequest = (data: SignUpData) => ({
+  type: SIGNUP_REQUEST,
   data,
 });
 
-export const signUpSuccess = (): SignUpSuccess => ({
-  type: SIGN_UP_SUCCESS,
+export const signUpSuccess = () => ({
+  type: SIGNUP_SUCCESS,
 });
 
-export const signUpFailure = (error: string): SignUpFailure => ({
-  type: SIGN_UP_FAILURE,
+export const signUpFailure = (error: string) => ({
+  type: SIGNUP_FAILURE,
   error,
 });
 
-export type SignUp =
-  | ReturnType<typeof signUpRequest>
-  | ReturnType<typeof signUpSuccess>
-  | ReturnType<typeof signUpFailure>;
+export type SignUp = SignUpRequest | SignUpSuccess | SignUpFailure;

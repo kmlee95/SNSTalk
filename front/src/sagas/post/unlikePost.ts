@@ -1,27 +1,29 @@
 import axios from 'axios';
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { takeLatest, put, call } from 'redux-saga/effects';
+
 import {
-  UNLIKE_POST_REQUEST,
   UnLikePostRequest,
+  UNLIKE_POST_REQUEST,
   unLikePostSuccess,
   unLikePostFailure,
-} from '@reducers/post/unlikePost';
+} from '../../reducers/post/unLikePost';
 
-function unlikePostAPI(data: number) {
-  return axios.delete(`/post/${data}/like`);
+function unLikePostAPI(postId: number) {
+  return axios.delete(`/post/${postId}/like`, { withCredentials: true });
 }
 
-function* unlikePost(action: UnLikePostRequest) {
+function* unLikePost(action: UnLikePostRequest) {
   try {
-    const result = yield call(unlikePostAPI, action.data);
-    yield put(unLikePostSuccess(result.data));
-  } catch (err) {
-    yield put(unLikePostFailure(err.response.data));
+    const result = yield call(unLikePostAPI, action.postId);
+    yield put(unLikePostSuccess(result.data, action.postIndex));
+  } catch (e) {
+    console.error(e);
+    yield put(unLikePostFailure(e));
   }
 }
 
-function* watchUnlikePost() {
-  yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
+function* watchUnLikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unLikePost);
 }
 
-export default watchUnlikePost;
+export default watchUnLikePost;
