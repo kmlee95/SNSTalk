@@ -5,10 +5,10 @@ import { Avatar, Menu, Drawer, Button } from 'antd';
 import { MenuOutlined, UserOutlined } from '@ant-design/icons';
 
 import { HeaderMenu, UserAvatar, LogoutWrapper } from './styled';
-import { RootState } from '../../../reducers';
-import { UserInfo } from '../../../reducers/user';
-import { LOADING_LOGOUT } from '../../../reducers/user/values';
-import { logOutRequest } from '../../../reducers/user/logout';
+import { RootState } from '@reducers/.';
+import { UserInfo } from '@reducers/user';
+import { LOADING_LOGOUT } from '@reducers/user/values';
+import { logOutRequest } from '@reducers/user/logout';
 
 interface Props {
   info: UserInfo;

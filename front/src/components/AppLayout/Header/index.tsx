@@ -6,7 +6,7 @@ import { message } from 'antd';
 import { HeaderWrapper, LeftWrapper, Search } from './styled';
 import UnSignInMenu from './UnSignInMenu';
 import SignInMenu from './SignInMenu';
-import { UserInfo } from '../../../reducers/user';
+import { UserInfo } from '@reducers/user';
 
 interface Props {
   userInfo: UserInfo;
