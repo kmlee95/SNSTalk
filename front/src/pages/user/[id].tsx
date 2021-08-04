@@ -1,84 +1,53 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Avatar, Card } from 'antd';
-import { END } from 'redux-saga';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-
+import React, { useRef, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { LOAD_USER_POSTS_REQUEST } from '@reducers/post/';
-import { loadMyInfoRequest } from '@reducers/user/getUserInfo';
-import { loadUserRequest } from '@reducers/user/getOtherInfo';
-import PostCard from '@components/PostCard';
-import wrapper from '@store/configureStore';
+import { END } from 'redux-saga';
 
+import UserInfo from '@components/UserInfo';
+import FriendRequestForm from '@components/FriendRequestForm';
+import { GetOtherUserInfoRequest } from '@reducers/user/getOtherUserInfo';
 import { RootState } from '@reducers/.';
+import PostCard from '@components/PostCard';
+import { getUserPostsRequest } from '@reducers/post/getUserPosts';
+import wrapper from '@src/store/configureStore';
 
 const User = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { id } = router.query;
-  const { mainPosts, hasMorePosts } = useSelector((state: RootState) => state.post);
-  const { userInfo } = useSelector((state: RootState) => state.user);
+  const { info } = useSelector((state: RootState) => state.user);
+  const { id } = useSelector((state: RootState) => state.user.otherUserInfo);
+  const { posts } = useSelector((state: RootState) => state.post);
+  const { hasMorePost } = useSelector((state: RootState) => state.post);
+  const countRef = useRef<string[]>([]);
+
+  const onScroll = useCallback(() => {
+    if (
+      posts.length !== 0 &&
+      hasMorePost &&
+      window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300
+    ) {
+      const lastUpdatedAt = posts[posts.length - 1].updatedAt;
+      if (!countRef.current.includes(lastUpdatedAt)) {
+        dispatch(getUserPostsRequest(id, lastUpdatedAt));
+        countRef.current.push(lastUpdatedAt);
+      }
+    }
+  }, [countRef.current, hasMorePost, posts]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts) {
-          dispatch({
-            type: LOAD_USER_POSTS_REQUEST,
-            lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
-            data: id,
-          });
-        }
-      }
-    };
     window.addEventListener('scroll', onScroll);
+
     return () => {
+      countRef.current = [];
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts.length, hasMorePosts, id]);
+  }, [hasMorePost, posts.length]);
 
   return (
     <>
-      {userInfo && (
-        <Head>
-          <title>
-            {userInfo.nickname}
-            님의 글
-          </title>
-          <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:description" content={`${userInfo.nickname}님의 게시글`} />
-          <meta property="og:image" content="https://nodebird.com/favicon.ico" />
-          <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
-        </Head>
-      )}
-      {userInfo ? (
-        <Card
-          actions={[
-            <div key="twit">
-              게시글 수
-              <br />
-              {userInfo.Posts}
-            </div>,
-            <div key="following">
-              팔로잉
-              <br />
-              {userInfo.Followings}
-            </div>,
-            <div key="follower">
-              팔로워
-              <br />
-              {userInfo.Followers}
-            </div>,
-          ]}
-        >
-          <Card.Meta avatar={<Avatar>{userInfo.nickname[0]}</Avatar>} title={userInfo.nickname} />
-        </Card>
-      ) : null}
-      {mainPosts.map((post) => (
-        <PostCard key={post.id} post={post} />
+      {info && info.id !== id && <FriendRequestForm id={id} />}
+      <UserInfo />
+      {posts.map((v, i) => (
+        <PostCard key={`post_${v.id}`} postIndex={i} postData={v} />
       ))}
     </>
   );
@@ -90,12 +59,13 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  context.store.dispatch({
-    type: LOAD_USER_POSTS_REQUEST,
-    data: context.params.id,
-  });
-  context.store.dispatch(loadMyInfoRequest());
-  context.store.dispatch(loadUserRequest(Number(context.params.id)));
+
+  if (context.query.id) {
+    const id = parseInt(context.query.id as string, 10);
+    context.store.dispatch(GetOtherUserInfoRequest(id));
+    context.store.dispatch(getUserPostsRequest(id));
+  }
+
   context.store.dispatch(END);
   await (context.store as any).sagaTask.toPromise();
 

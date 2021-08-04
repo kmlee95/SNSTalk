@@ -1,22 +1,24 @@
 import axios from 'axios';
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { takeLatest, put, call } from 'redux-saga/effects';
+
 import {
-  REMOVE_POST_REQUEST,
   RemovePostRequest,
+  REMOVE_POST_REQUEST,
   removePostSuccess,
   removePostFailure,
-} from '@reducers/post/removePost';
+} from '../../reducers/post/removePost';
 
-function removePostAPI(data: number) {
-  return axios.delete(`/post/${data}`);
+function removePostAPI(postId) {
+  return axios.delete(`/post/${postId}`, { withCredentials: true });
 }
 
 function* removePost(action: RemovePostRequest) {
   try {
-    const result = yield call(removePostAPI, action.data);
-    yield put(removePostSuccess(result.data));
-  } catch (err) {
-    yield put(removePostFailure(err.response.data));
+    yield call(removePostAPI, action.postId);
+    yield put(removePostSuccess(action.postIndex));
+  } catch (e) {
+    console.error(e);
+    yield put(removePostFailure(e));
   }
 }
 

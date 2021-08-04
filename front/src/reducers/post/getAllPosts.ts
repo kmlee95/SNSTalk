@@ -1,40 +1,37 @@
-import { AllPostData } from '@src/types/post';
+import { PostInfo } from './index';
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST' as const;
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS' as const;
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE' as const;
+export const GET_ALL_POSTS_REQUEST = 'GET_ALL_POSTS_REQUEST' as const;
+export const GET_ALL_POSTS_SUCCESS = 'GET_ALL_POSTS_SUCCESS' as const;
+export const GET_ALL_POSTS_FAILURE = 'GET_ALL_POSTS_FAILURE' as const;
 
-export interface LoadPostsRequest {
-  type: typeof LOAD_POSTS_REQUEST;
-  data: number | null; //lastId가 있거나 없거나..
+export interface GetAllPostsRequest {
+  type: typeof GET_ALL_POSTS_REQUEST;
+  lastUpdatedAt: string;
 }
 
-export interface LoadPostsSuccess {
-  type: typeof LOAD_POSTS_SUCCESS;
-  data: AllPostData[];
+export interface GetAllPostsSuccess {
+  type: typeof GET_ALL_POSTS_SUCCESS;
+  data: PostInfo[];
 }
 
-export interface LoadPostFailure {
-  type: typeof LOAD_POSTS_FAILURE;
+export interface GetAllPostsFailure {
+  type: typeof GET_ALL_POSTS_FAILURE;
   error: string;
 }
 
-export const loadPostsRequest = (data?: number): LoadPostsRequest => ({
-  type: LOAD_POSTS_REQUEST,
+export const getAllPostsRequest = (lastUpdatedAt = ''): GetAllPostsRequest => ({
+  type: GET_ALL_POSTS_REQUEST,
+  lastUpdatedAt,
+});
+
+export const getAllPostsSuccess = (data: PostInfo[]): GetAllPostsSuccess => ({
+  type: GET_ALL_POSTS_SUCCESS,
   data,
 });
 
-export const loadPostsSuccess = (data: AllPostData[]): LoadPostsSuccess => ({
-  type: LOAD_POSTS_SUCCESS,
-  data,
-});
-
-export const loadPostsFailure = (error: string): LoadPostFailure => ({
-  type: LOAD_POSTS_FAILURE,
+export const getAllPostsFailure = (error: string): GetAllPostsFailure => ({
+  type: GET_ALL_POSTS_FAILURE,
   error,
 });
 
-export type GetAllPost =
-  | ReturnType<typeof loadPostsRequest>
-  | ReturnType<typeof loadPostsSuccess>
-  | ReturnType<typeof loadPostsFailure>;
+export type GetAllPosts = GetAllPostsRequest | GetAllPostsSuccess | GetAllPostsFailure;

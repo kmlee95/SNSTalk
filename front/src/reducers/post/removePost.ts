@@ -4,12 +4,13 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE' as const;
 
 export interface RemovePostRequest {
   type: typeof REMOVE_POST_REQUEST;
-  data: number; //postId
+  postId: number;
+  postIndex: number;
 }
 
 export interface RemovePostSuccess {
   type: typeof REMOVE_POST_SUCCESS;
-  data: number; //postId
+  postIndex: number;
 }
 
 export interface RemovePostFailure {
@@ -17,14 +18,15 @@ export interface RemovePostFailure {
   error: string;
 }
 
-export const removePostRequest = (data: number): RemovePostRequest => ({
+export const removePostRequest = (postId: number, postIndex: number): RemovePostRequest => ({
   type: REMOVE_POST_REQUEST,
-  data,
+  postId,
+  postIndex,
 });
 
-export const removePostSuccess = (data: number): RemovePostSuccess => ({
+export const removePostSuccess = (postIndex: number): RemovePostSuccess => ({
   type: REMOVE_POST_SUCCESS,
-  data,
+  postIndex,
 });
 
 export const removePostFailure = (error: string): RemovePostFailure => ({
@@ -32,7 +34,4 @@ export const removePostFailure = (error: string): RemovePostFailure => ({
   error,
 });
 
-export type RemovePost =
-  | ReturnType<typeof removePostRequest>
-  | ReturnType<typeof removePostSuccess>
-  | ReturnType<typeof removePostFailure>;
+export type RemovePost = RemovePostRequest | RemovePostSuccess | RemovePostFailure;

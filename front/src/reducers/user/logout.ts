@@ -1,35 +1,31 @@
-/* 로그아웃 */
-export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST' as const;
-export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS' as const;
-export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE' as const;
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST' as const;
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS' as const;
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE' as const;
 
 export interface LogOutRequest {
-  type: typeof LOG_OUT_REQUEST;
+  type: typeof LOGOUT_REQUEST;
 }
 
 export interface LogOutSuccess {
-  type: typeof LOG_OUT_SUCCESS;
+  type: typeof LOGOUT_SUCCESS;
 }
 
 export interface LogOutFailure {
-  type: typeof LOG_OUT_FAILURE;
+  type: typeof LOGOUT_FAILURE;
   error: string;
 }
 
 export const logOutRequest = (): LogOutRequest => ({
-  type: LOG_OUT_REQUEST,
+  type: LOGOUT_REQUEST,
 });
 
 export const logOutSuccess = (): LogOutSuccess => ({
-  type: LOG_OUT_SUCCESS,
+  type: LOGOUT_SUCCESS,
 });
 
 export const logOutFailure = (error: string): LogOutFailure => ({
-  type: LOG_OUT_FAILURE,
+  type: LOGOUT_FAILURE,
   error,
 });
 
-export type Logout =
-  | ReturnType<typeof logOutRequest>
-  | ReturnType<typeof logOutSuccess>
-  | ReturnType<typeof logOutFailure>;
+export type LogOut = LogOutRequest | LogOutSuccess | LogOutFailure;

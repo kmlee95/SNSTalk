@@ -4,7 +4,11 @@ import { ServerStyleSheet } from 'styled-components';
 
 import { GolbalStyle } from '@theme/globalStyle';
 
-export default class MyDocument extends Document {
+interface Props {
+  styleTags: Array<React.ReactElement<{}>>;
+}
+
+export default class MyDocument extends Document<Props> {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;

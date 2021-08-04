@@ -1,16 +1,16 @@
 import React, { useRef, useCallback, memo } from 'react';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+
 import axios from 'axios';
+import { UploadWrapper, UploadButtonWrapper, PreviewWrapper } from './styled';
 
-import { UploadWrapper, UploadButton, Preview } from './styled';
-
-interface ImageUploadProps {
+interface Props {
   addUploadImages: (imgSrc: string[]) => void;
   removeUploadImage: (index: number) => () => void;
   uploadImages: string[];
 }
 
-const ImageUpload = memo(({ addUploadImages, removeUploadImage, uploadImages }: ImageUploadProps) => {
+const ImageUpload = memo(({ addUploadImages, removeUploadImage, uploadImages }: Props) => {
   const imageInput = useRef<HTMLInputElement>();
 
   const onChangeImageUpload = useCallback(
@@ -32,19 +32,20 @@ const ImageUpload = memo(({ addUploadImages, removeUploadImage, uploadImages }: 
     }
   }, [imageInput.current]);
 
+  // console.log(uploadImages);
   return (
     <div>
-      <input type="file" multiple hidden ref={imageInput} onChange={onChangeImageUpload} />
+      <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImageUpload} />
       <UploadWrapper>
         {uploadImages.map((v, i) => (
-          <Preview key={v} imgSrc={v}>
+          <PreviewWrapper key={v} imgSrc={`http://localhost:3065/${v}`}>
             <CloseOutlined onClick={removeUploadImage(i)} />
-          </Preview>
+          </PreviewWrapper>
         ))}
-        <UploadButton onClick={onClickImageUpload}>
+        <UploadButtonWrapper onClick={onClickImageUpload}>
           <PlusOutlined />
           <div>업로드</div>
-        </UploadButton>
+        </UploadButtonWrapper>
       </UploadWrapper>
     </div>
   );

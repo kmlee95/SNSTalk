@@ -1,13 +1,11 @@
-import { all, fork } from 'redux-saga/effects';
 import axios from 'axios';
+import { all, call } from 'redux-saga/effects';
 
-import postSaga from './post';
-import userSaga from './user';
-import { backUrl } from '@config/.';
+import user from './user/index';
+import post from './post/index';
 
-axios.defaults.baseURL = backUrl;
-axios.defaults.withCredentials = true;
+axios.defaults.baseURL = `http://localhost:3065/api`;
 
 export default function* rootSaga() {
-  yield all([fork(postSaga), fork(userSaga)]);
+  yield all([call(user), call(post)]);
 }

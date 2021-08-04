@@ -1,41 +1,44 @@
-/* 유저정보 업데이트 */
-import { UpdateInfo } from '@src/types/user';
+export const UPDATE_USER_INFO_REQUEST = 'UPDATE_USER_INFO_REQUEST' as const;
+export const UPDATE_USER_INFO_SUCCESS = 'UPDATE_USER_INFO_SUCCESS' as const;
+export const UPDATE_USER_INFO_FAILURE = 'UPDATE_USER_INFO_FAILURE' as const;
 
-export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST' as const;
-export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS' as const;
-export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE' as const;
-
-export interface ChangeNicknameRequest {
-  type: typeof CHANGE_NICKNAME_REQUEST;
-  data: UpdateInfo | string;
+export interface UpdateInfo {
+  familyName?: string;
+  firstName?: string;
+  birth?: string;
+  phone?: string;
+  mail?: string;
+  profilePhoto?: string;
 }
 
-export interface ChangeNicknameSuccess {
-  type: typeof CHANGE_NICKNAME_SUCCESS;
+export interface UpdateUserInfoRequest {
+  type: typeof UPDATE_USER_INFO_REQUEST;
   data: UpdateInfo;
 }
 
-export interface ChangeNicknameFailure {
-  type: typeof CHANGE_NICKNAME_FAILURE;
+export interface UpdateUserInfoSuccess {
+  type: typeof UPDATE_USER_INFO_SUCCESS;
+  data: UpdateInfo;
+}
+
+export interface UpdateUserInfoFailure {
+  type: typeof UPDATE_USER_INFO_FAILURE;
   error: string;
 }
 
-export const changeNicknameRequest = (data: UpdateInfo | string): ChangeNicknameRequest => ({
-  type: CHANGE_NICKNAME_REQUEST,
+export const updateUserInfoRequest = (data: UpdateInfo): UpdateUserInfoRequest => ({
+  type: UPDATE_USER_INFO_REQUEST,
   data,
 });
 
-export const changeNicknameSuccess = (data: UpdateInfo): ChangeNicknameSuccess => ({
-  type: CHANGE_NICKNAME_SUCCESS,
+export const updateUserInfoSuccess = (data: UpdateInfo): UpdateUserInfoSuccess => ({
+  type: UPDATE_USER_INFO_SUCCESS,
   data,
 });
 
-export const changeNicknameFailure = (error: string): ChangeNicknameFailure => ({
-  type: CHANGE_NICKNAME_FAILURE,
+export const updateUserInfoFailure = (error: string): UpdateUserInfoFailure => ({
+  type: UPDATE_USER_INFO_FAILURE,
   error,
 });
 
-export type UpdateUserInfo =
-  | ReturnType<typeof changeNicknameRequest>
-  | ReturnType<typeof changeNicknameSuccess>
-  | ReturnType<typeof changeNicknameFailure>;
+export type UpdateUserInfo = UpdateUserInfoRequest | UpdateUserInfoSuccess | UpdateUserInfoFailure;

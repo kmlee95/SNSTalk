@@ -1,17 +1,17 @@
-import { LikePostChange } from '@src/types/post';
-
 export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST' as const;
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS' as const;
 export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE' as const;
 
 export interface UnLikePostRequest {
   type: typeof UNLIKE_POST_REQUEST;
-  data: number; //postId
+  postId: number;
+  postIndex: number;
 }
 
 export interface UnLikePostSuccess {
   type: typeof UNLIKE_POST_SUCCESS;
-  data: LikePostChange;
+  data: { id: number };
+  postIndex: number;
 }
 
 export interface UnLikePostFailure {
@@ -19,14 +19,16 @@ export interface UnLikePostFailure {
   error: string;
 }
 
-export const unLikePostRequest = (data: number): UnLikePostRequest => ({
+export const unLikePostRequest = (postId: number, postIndex: number): UnLikePostRequest => ({
   type: UNLIKE_POST_REQUEST,
-  data,
+  postId,
+  postIndex,
 });
 
-export const unLikePostSuccess = (data: LikePostChange): UnLikePostSuccess => ({
+export const unLikePostSuccess = (data: { id: number }, postIndex: number): UnLikePostSuccess => ({
   type: UNLIKE_POST_SUCCESS,
   data,
+  postIndex,
 });
 
 export const unLikePostFailure = (error: string): UnLikePostFailure => ({
@@ -34,7 +36,4 @@ export const unLikePostFailure = (error: string): UnLikePostFailure => ({
   error,
 });
 
-export type UnlikePost =
-  | ReturnType<typeof unLikePostRequest>
-  | ReturnType<typeof unLikePostSuccess>
-  | ReturnType<typeof unLikePostFailure>;
+export type UnLikePost = UnLikePostRequest | UnLikePostSuccess | UnLikePostFailure;
